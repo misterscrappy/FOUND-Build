@@ -19,6 +19,7 @@ namespace Found.Core
         {
             if (source == null) throw new ArgumentNullException("source");
             data = source;
+            FoundStateRegistry.EnsureAllStates(data);
             BuildIndexesAndValidate();
         }
 
