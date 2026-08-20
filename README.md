@@ -6,19 +6,39 @@ This repository is the clean Unity production rebuild of **FOUND**.
 
 The legacy application remains in `misterscrappy/FOUND`. The migration/reference baseline is **FOUND 3.1.49**, frozen from legacy commit `5994a48b3a3dfdccb0402865a86b673e12c11a6e` on branch `reference/3.1.49-unity-migration`.
 
-The 3.1.49 build is a **visual, content, and behavior reference**. Its patch/hotfix architecture is not to be copied into this repository.
+The 3.1.49 build is a visual, content, and behavior reference. Its patch/hotfix architecture is not copied here.
 
-## Rebuild principles
+## Current architecture decision
 
-- Native Unity implementation; no embedded legacy web runtime.
-- Preserve approved FOUND artwork, layouts, content, and identity while improving polish.
-- Build systems cleanly before scaling content to all 50 states.
-- 3D stamp presentation uses stable meshes, materials, shaders, textures, and controlled overlays rather than per-fix mesh regeneration.
-- Trading, unique collectible instances, provenance, local postmarks, rarity variants, and persistence are first-class systems.
-- New work is developed in focused branches and merged only after validation.
+FOUND is now a **2D collectible-first game**. The 3D stamp concept has been removed completely.
 
-## Planned Unity structure
+- Every stamp uses one reusable flat stamp-card layout.
+- Rarities change artwork treatment, overlays, typography, and color accents only.
+- Gold Foil uses the same layout and information fields as every other stamp; it is an unnumbered state-completion reward.
+- Proof uses a visible `PRINTER'S PROOF` overlay.
+- Local Postmarks are visible city-and-date marks.
+- Alternate replaces Archive in the clean rebuild.
+- Limited Issue is the only numbered rarity and is constrained to `1–500`.
 
-`Assets/FOUND/` will contain game-owned art, audio, materials, models, prefabs, scenes, scripts, shaders, stamp data, and UI.
+## Core systems already represented in code
 
-See `Docs/MIGRATION_BASELINE.md` for the migration contract.
+- data-driven 50-state registry
+- New York 3.1.49 destination/catalog data
+- rarity and Bonus Trait rules
+- unique collectible instance IDs
+- per-copy provenance
+- Field Route and check-in acquisition
+- location-locked Local Postmarks
+- discovery, coin, XP, level, and album milestone progression
+- automatic Gold Foil state-completion awards
+- persistent JSON saves with backup recovery
+- direct player-to-player transfer codes with replay prevention on the receiving profile
+- trade history and provenance preservation
+- reusable 2D `StampCardView`
+- Editor validation command: `FOUND > Validate Core Content`
+
+## Production boundary
+
+The local Limited Issue allocator prevents duplicate edition numbers inside one save. Truly global `1–500` uniqueness and authoritative online trading require a server/backend authority. The code isolates that responsibility behind interfaces so a backend can replace the local implementation without rewriting collecting or UI systems.
+
+See `Docs/ARCHITECTURE.md` and `Docs/MIGRATION_BASELINE.md`.
