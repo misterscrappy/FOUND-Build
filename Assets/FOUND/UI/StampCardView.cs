@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace Found.UI
 {
     // One flat 2D stamp layout for every rarity, including Gold Foil.
-    // Rarity changes styling/overlays only; it never swaps to a separate 3D renderer or geometry.
+    // Rarity changes styling/overlays only; it never swaps to another renderer or geometry.
     public sealed class StampCardView : MonoBehaviour
     {
         [Header("Shared stamp layout")]
@@ -32,6 +32,7 @@ namespace Found.UI
         private static readonly Color Proof = new Color32(109, 79, 135, 255);
         private static readonly Color Alternate = new Color32(184, 135, 46, 255);
         private static readonly Color GoldFoil = new Color32(216, 174, 85, 255);
+        private static readonly Color GoldArtwork = new Color32(196, 143, 40, 255);
 
         public void Bind(FoundCatalogService catalog, StampDesign design, CollectibleInstance copy)
         {
@@ -39,8 +40,9 @@ namespace Found.UI
             if (design == null) throw new ArgumentNullException("design");
             if (copy == null) throw new ArgumentNullException("copy");
 
+            bool isGold = copy.rarity == StampRarity.GoldFoil;
             Color accent = RarityColor(copy.rarity);
-            if (paper != null) paper.color = copy.rarity == StampRarity.GoldFoil ? new Color32(247, 231, 177, 255) : Paper;
+            if (paper != null) paper.color = isGold ? new Color32(247, 231, 177, 255) : Paper;
             if (frame != null) frame.color = accent;
             if (rarityBand != null) rarityBand.color = accent;
 
@@ -48,8 +50,12 @@ namespace Found.UI
             {
                 Sprite sprite = string.IsNullOrWhiteSpace(design.artworkKey) ? null : Resources.Load<Sprite>(design.artworkKey);
                 artwork.sprite = sprite;
-                artwork.enabled = sprite != null;
                 artwork.preserveAspect = true;
+                // Gold Foil deliberately uses the same artwork box as every other stamp. Until a flat
+                // state-completion illustration is authored, the box becomes a clean gold field rather
+                // than falling back to the removed 3D asset.
+                artwork.enabled = sprite != null || isGold;
+                artwork.color = sprite != null ? Color.white : (isGold ? GoldArtwork : Color.white);
             }
 
             Set(catalogText, design.catalogNumber);
