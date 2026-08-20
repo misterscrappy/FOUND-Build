@@ -7,51 +7,88 @@
 - Reference commit: `5994a48b3a3dfdccb0402865a86b673e12c11a6e`
 - Reference product: FOUND 3.1.49 APK
 
-The legacy repository is not the production architecture for the Unity rebuild. It exists to preserve approved visuals, content, gameplay intent, data, and behavior for comparison.
+The legacy repository preserves approved visuals, content, gameplay intent, data, and behavior for comparison. It is not the production architecture for this rebuild.
 
 ## Migration rule
 
-When the Unity rebuild conflicts with the legacy implementation, preserve the approved player-facing result but prefer a clean native Unity implementation. Do not reproduce legacy hotfix chains, DOM/WebView rendering, or patch-on-patch behavior.
+Preserve the approved player-facing identity of FOUND while replacing legacy implementation details with clean native Unity systems. Do not reproduce DOM/WebView rendering, hotfix chains, runtime monkey-patches, duplicate renderers, or version-specific compatibility layers.
 
-## Core product requirements
+## 2D-only rule
 
-The new architecture must be designed for:
+The 3D stamp concept is removed.
 
-1. Fifty-state content expansion without duplicating core gameplay code.
-2. Data-driven states, locations, stamp designs, rarity variants, and individual collectible instances.
-3. Unique collectible identity and provenance suitable for player-to-player trading.
-4. Location-aware local postmarks without blocking non-local collection of ordinary stamps.
-5. Native 3D stamp viewing with predictable mesh/material behavior.
-6. Rarity-specific visual treatments implemented with reusable materials, shaders, textures, decals/overlays, and controlled geometry.
-7. Persistent collection/save data with a clear migration strategy.
-8. Portrait-first mobile UI and touch interactions.
-9. Stable production branches: experimental work must not patch the stable build in place.
+There is one reusable 2D stamp-card layout. Standard, Special, Limited, Proof, Alternate, Local Postmark presentation, Bonus Traits, and Gold Foil all use that same structural layout. Rarity changes styling and overlays rather than changing geometry or creating a separate renderer.
 
-## First production vertical slice
+Gold Foil requirements:
 
-Before scaling to additional states, the Unity version should prove New York at production quality:
+- same stamp layout as ordinary destination stamps
+- all catalog/title/place/lore/history/legal information remains visible
+- unnumbered
+- no Bonus Trait
+- awarded to every collector who completes a state's required destination set
+- not randomly rolled
+- not tradeable
 
-- app shell and navigation
-- Explore
-- Collection/state album
-- stamp viewer
-- one complete collectible acquisition/reveal flow
-- New York stamp data/content
-- rarity presentation
-- local postmark behavior
-- Field Route/Hunt core loop
-- persistence
-- trading-ready collectible instance model
+## Rarity model
 
-Trading UI/networking may be implemented after the collectible identity model is proven, but the data model must support trading from the beginning.
+Rollable rarities:
 
-## 3D quality rule
+1. Standard Issue
+2. Special Issue
+3. Limited Issue
+4. Proof Issue
+5. Alternate
 
-Do not regenerate a whole stamp mesh to make simple art/layout corrections. Use a stable base stamp mesh and separate responsibilities:
+Gold Foil is completion-only and outside the random rarity pool.
 
-- geometry: physical stamp shape/depth
-- textures: artwork and printed information
-- materials/shaders: paper, ink, foil, holographic/security behavior, emboss/deboss response
-- overlays/decals: postmarks, proof marks, signatures, security marks, controlled variant effects
+Limited Issue is the only numbered rarity. Its production contract is globally unique numbers `1–500` per stamp design. Local development allocation is not represented as globally authoritative.
 
-This is intended to make visual corrections deterministic and prevent unrelated 3D regressions.
+## Fifty-state architecture
+
+All fifty states are registered in the content model now. New York is populated from the 3.1.49 baseline. Additional states add data/art, not new gameplay code.
+
+Each state definition supplies:
+
+- state code and name
+- album identity
+- destination stamp IDs
+- optional completion stamp ID
+
+Each stamp design supplies:
+
+- stable internal ID
+- catalog number
+- state/album placement
+- place/title
+- artwork resource key
+- observations
+- local-postmark coordinates/radius
+- lore/history
+- base value
+- completion/tradeability flags
+
+## Collectible-instance contract
+
+Every owned stamp is an individual instance with:
+
+- immutable instance ID
+- stamp design ID
+- rarity
+- Bonus Trait
+- optional Limited edition number
+- acquisition time/source
+- optional Local Postmark
+- calculated value
+- provenance history
+
+Trading moves the exact instance rather than creating a new copy.
+
+## Location behavior
+
+Ordinary stamps are not location-locked. A player can collect stamps from other states through normal collecting systems.
+
+Local Postmarks are location-locked. A qualifying check-in inside a stamp's configured local radius adds the visible city-and-date postmark to that exact collectible instance.
+
+## Validation rule
+
+New features are integrated into the core service/model architecture. Do not solve defects by appending a new hotfix file or replacing behavior at runtime.
