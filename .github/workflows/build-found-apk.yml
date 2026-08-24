@@ -1,0 +1,115 @@
+name: Build FOUND Complete APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/build-found-apk.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout private FOUND source
+        uses: actions/checkout@v4
+        with:
+          repository: misterscrappy/FOUND
+          ref: 085af4fd2bbb22b77cbfb96fb91f26bd8b60ff57
+          token: ${{ secrets.FOUND_PRIVATE_REPO_TOKEN }}
+          path: source
+          persist-credentials: false
+
+      - name: Verify complete source
+        working-directory: source
+        run: |
+          test -f app/src/main/assets/js/runtime/pending-list-19-30.js
+          test -f app/src/main/assets/js/runtime/base-alpha-forward.js
+          test -f app/src/main/assets/js/runtime/post-office-mailbox-sales.js
+          test -f app/src/main/assets/js/runtime/stamp-surface-integrity.js
+          grep -q 'pending-list-19-30.js' app/src/main/assets/js/runtime/approved.js
+          grep -q 'versionCode 68' app/build.gradle
+          grep -q "versionName '3.2.2'" app/build.gradle
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Restore FOUND signing key
+        working-directory: source
+        run: |
+          base64 --decode .github/signing/found-alpha-debug.keystore.b64 \
+            > .github/signing/found-alpha-debug.keystore
+          chmod 600 .github/signing/found-alpha-debug.keystore
+
+          FINGERPRINT="$(keytool -list -v \
+            -keystore .github/signing/found-alpha-debug.keystore \
+            -storepass android \
+            -alias androiddebugkey 2>/dev/null \
+            | sed -n 's/^[[:space:]]*SHA256: //p' \
+            | tr -d ':' \
+            | head -n 1)"
+
+          test "$FINGERPRINT" = \
+            "678E0BF28B640EC68C9103DBC1ED33946ECB32D6AA8B16F3CD2A6ACDA459247E"
+
+      - name: Build complete APK
+        working-directory: source
+        run: gradle :app:assembleDebug --stacktrace
+
+      - name: Verify APK contents
+        working-directory: source
+        run: |
+          unzip -t app/build/outputs/apk/debug/app-debug.apk
+          unzip -l app/build/outputs/apk/debug/app-debug.apk \
+            | grep -F 'assets/js/runtime/pending-list-19-30.js'
+          unzip -l app/build/outputs/apk/debug/app-debug.apk \
+            | grep -F 'assets/js/runtime/base-alpha-forward.js'
+          unzip -l app/build/outputs/apk/debug/app-debug.apk \
+            | grep -F 'assets/js/runtime/post-office-mailbox-sales.js'
+          unzip -l app/build/outputs/apk/debug/app-debug.apk \
+            | grep -F 'assets/js/runtime/stamp-surface-integrity.js'
+
+      - name: Verify signing certificate
+        working-directory: source
+        run: |
+          APKSIGNER="$(find "$ANDROID_HOME/build-tools" \
+            -type f -name apksigner | sort -V | tail -n 1)"
+
+          CERT_OUT="$($APKSIGNER verify --verbose --print-certs \
+            app/build/outputs/apk/debug/app-debug.apk 2>&1)"
+
+          printf '%s\n' "$CERT_OUT"
+
+          CERT_SHA="$(printf '%s\n' "$CERT_OUT" \
+            | grep -i -m1 'certificate.*sha-256.*digest' \
+            | sed -E 's/.*:[[:space:]]*//' \
+            | tr -d ':[:space:]' \
+            | tr '[:lower:]' '[:upper:]')"
+
+          test "$CERT_SHA" = \
+            "678E0BF28B640EC68C9103DBC1ED33946ECB32D6AA8B16F3CD2A6ACDA459247E"
+
+      - name: Package APK
+        run: |
+          cp source/app/build/outputs/apk/debug/app-debug.apk \
+             FOUND-v3.2.2-COMPLETE.apk
+
+      - name: Upload complete APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: FOUND-v3.2.2-COMPLETE-APK
+          path: FOUND-v3.2.2-COMPLETE.apk
+          if-no-files-found: error
+          retention-days: 30
