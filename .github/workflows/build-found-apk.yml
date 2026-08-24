@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: misterscrappy/FOUND
-          ref: a4c3d13e563eef69d676304c077ce9d054aba1aa
+          ref: 6e29602abc044d3c9ace394eef4041936fbed4ee
           token: ${{ secrets.FOUND_PRIVATE_REPO_TOKEN }}
           path: source
           persist-credentials: false
@@ -37,15 +37,17 @@ jobs:
           test -f app/src/main/assets/js/runtime/stamp-surface-integrity.js
           test -f app/src/main/assets/js/runtime/stamp-detail-performance.js
           test -f app/src/main/assets/js/runtime/album-detail-open-guard.js
+          test -f app/src/main/assets/js/runtime/android-safe-album-inspector.js
           test -f app/src/main/assets/js/ui/settings-popup-controller.js
           test -f app/src/main/assets/js/ui/market-listing-detail.js
           grep -q 'pending-list-19-30.js' app/src/main/assets/js/runtime/approved.js
           grep -q 'stamp-detail-performance.js' app/src/main/assets/js/runtime/approved.js
           grep -q 'album-detail-open-guard.js' app/src/main/assets/js/runtime/approved.js
+          grep -q 'android-safe-album-inspector.js' app/src/main/assets/js/runtime/approved.js
           grep -q 'settings-popup-controller.js' app/src/main/assets/js/runtime/approved.js
           grep -q 'market-listing-detail.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'versionCode 70' app/build.gradle
-          grep -q "versionName '3.2.4'" app/build.gradle
+          grep -q 'versionCode 71' app/build.gradle
+          grep -q "versionName '3.2.5'" app/build.gradle
 
       - name: Set up Java 17
         uses: actions/setup-java@v5
@@ -97,6 +99,8 @@ jobs:
           unzip -l app/build/outputs/apk/debug/app-debug.apk \
             | grep -F 'assets/js/runtime/album-detail-open-guard.js'
           unzip -l app/build/outputs/apk/debug/app-debug.apk \
+            | grep -F 'assets/js/runtime/android-safe-album-inspector.js'
+          unzip -l app/build/outputs/apk/debug/app-debug.apk \
             | grep -F 'assets/js/ui/settings-popup-controller.js'
           unzip -l app/build/outputs/apk/debug/app-debug.apk \
             | grep -F 'assets/js/ui/market-listing-detail.js'
@@ -124,12 +128,12 @@ jobs:
       - name: Package APK
         run: |
           cp source/app/build/outputs/apk/debug/app-debug.apk \
-             FOUND-v3.2.4-COMPLETE.apk
+             FOUND-v3.2.5-COMPLETE.apk
 
       - name: Upload complete APK
         uses: actions/upload-artifact@v4
         with:
-          name: FOUND-v3.2.4-COMPLETE-APK
-          path: FOUND-v3.2.4-COMPLETE.apk
+          name: FOUND-v3.2.5-COMPLETE-APK
+          path: FOUND-v3.2.5-COMPLETE.apk
           if-no-files-found: error
           retention-days: 30
