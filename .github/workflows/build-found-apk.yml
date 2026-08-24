@@ -1,4 +1,3 @@
-# Observable build trigger for FOUND v3.2.5
 name: Build FOUND Complete APK
 
 on:
