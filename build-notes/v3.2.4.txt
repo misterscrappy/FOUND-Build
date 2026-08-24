@@ -1,0 +1,3 @@
+FOUND v3.2.4 complete build target
+Private source commit: a4c3d13e563eef69d676304c077ce9d054aba1aa
+Album detail opening isolation is required in the packaged APK.
