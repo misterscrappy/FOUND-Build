@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: misterscrappy/FOUND
-          ref: 1f5c1b764d0bbceba2d44d035ccd52642574b80c
+          ref: 6c02166d8adb37ca65b745ad9edf523c5ff90578
           token: ${{ secrets.FOUND_PRIVATE_REPO_TOKEN }}
           path: source
           persist-credentials: false
@@ -40,23 +40,27 @@ jobs:
           test -f app/src/main/assets/js/runtime/stamp-autospin-tuning.js
           test -f app/src/main/assets/js/ui/market-listing-detail.js
           test -f app/src/main/assets/js/ui/collector-page-router.js
+          test -f app/src/main/assets/js/ui/collector-page-tab-cleanup.js
           test -f app/src/main/assets/js/ui/market-listing-forward-actions.js
           grep -q 'pending-list-19-30.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'collector-detail-loop-guard.js' app/src/main/assets/js/runtime/approved.js
           grep -q '__foundDetailLoopGuardV2' app/src/main/assets/js/runtime/collector-detail-loop-guard.js
           grep -q 'stamp-autospin-tuning.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'EXTRA_SPIN_PER_FRAME = 0.0008' app/src/main/assets/js/runtime/stamp-autospin-tuning.js
-          grep -q 'market-listing-detail.js' app/src/main/assets/js/runtime/approved.js
+          grep -q 'DETAIL_EXTRA_SPIN = 0.0011' app/src/main/assets/js/runtime/stamp-autospin-tuning.js
           grep -q 'collector-page-router.js' app/src/main/assets/js/runtime/approved.js
+          grep -q 'collector-page-tab-cleanup.js' app/src/main/assets/js/runtime/approved.js
           grep -q 'market-listing-forward-actions.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'cancel_listing' app/src/main/assets/js/ui/market-listing-forward-actions.js
+          grep -q 'foundListingRemoveConfirm' app/src/main/assets/js/ui/market-listing-forward-actions.js
+          grep -q 'KEEP LISTED' app/src/main/assets/js/ui/market-listing-forward-actions.js
           grep -q 'REMOVE LISTING' app/src/main/assets/js/ui/market-listing-forward-actions.js
-          grep -q 'foundCenterPageMode' app/src/main/assets/js/ui/collector-page-router.js
+          grep -q 'cancel_listing' app/src/main/assets/js/ui/market-listing-forward-actions.js
+          ! grep -q 'confirm("Remove this stamp listing from the Postal Exchange?' app/src/main/assets/js/ui/market-listing-forward-actions.js
+          grep -q 'data-found-tab="weekly"' app/src/main/assets/js/ui/collector-page-tab-cleanup.js || true
+          grep -q 'data-found-tab="profile"' app/src/main/assets/js/ui/collector-page-tab-cleanup.js
           ! grep -q 'settings-popup-controller.js' app/src/main/assets/js/runtime/approved.js
           ! grep -q 'android-safe-album-inspector.js' app/src/main/assets/js/runtime/approved.js
           ! grep -q 'album-detail-open-guard.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'versionCode 73' app/build.gradle
-          grep -q "versionName '3.2.7'" app/build.gradle
+          grep -q 'versionCode 74' app/build.gradle
+          grep -q "versionName '3.2.8'" app/build.gradle
 
       - name: Set up Java 17
         uses: actions/setup-java@v5
@@ -105,15 +109,17 @@ jobs:
           unzip -l "$APK" | grep -F 'assets/js/runtime/stamp-autospin-tuning.js'
           unzip -l "$APK" | grep -F 'assets/js/ui/market-listing-detail.js'
           unzip -l "$APK" | grep -F 'assets/js/ui/collector-page-router.js'
+          unzip -l "$APK" | grep -F 'assets/js/ui/collector-page-tab-cleanup.js'
           unzip -l "$APK" | grep -F 'assets/js/ui/market-listing-forward-actions.js'
           unzip -p "$APK" assets/js/runtime/collector-detail-loop-guard.js | grep -q '__foundDetailLoopGuardV2'
-          unzip -p "$APK" assets/js/runtime/stamp-autospin-tuning.js | grep -q 'EXTRA_SPIN_PER_FRAME = 0.0008'
-          unzip -p "$APK" assets/js/ui/market-listing-forward-actions.js | grep -q 'REMOVE LISTING'
+          unzip -p "$APK" assets/js/runtime/stamp-autospin-tuning.js | grep -q 'DETAIL_EXTRA_SPIN = 0.0011'
+          unzip -p "$APK" assets/js/ui/market-listing-forward-actions.js | grep -q 'foundListingRemoveConfirm'
+          unzip -p "$APK" assets/js/ui/market-listing-forward-actions.js | grep -q 'KEEP LISTED'
           unzip -p "$APK" assets/js/ui/market-listing-forward-actions.js | grep -q 'cancel_listing'
-          unzip -p "$APK" assets/js/ui/collector-page-router.js | grep -q 'foundCenterPageMode'
-          unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'stamp-autospin-tuning.js'
-          unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'collector-page-router.js'
+          unzip -p "$APK" assets/js/ui/collector-page-tab-cleanup.js | grep -q 'data-found-tab="profile"'
+          unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'collector-page-tab-cleanup.js'
           unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'market-listing-forward-actions.js'
+          unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'stamp-autospin-tuning.js'
           ! unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'settings-popup-controller.js'
           ! unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'android-safe-album-inspector.js'
           ! unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'album-detail-open-guard.js'
@@ -141,12 +147,12 @@ jobs:
       - name: Package APK
         run: |
           cp source/app/build/outputs/apk/debug/app-debug.apk \
-             FOUND-v3.2.7-COMPLETE.apk
+             FOUND-v3.2.8-COMPLETE.apk
 
       - name: Upload complete APK
         uses: actions/upload-artifact@v4
         with:
-          name: FOUND-v3.2.7-COMPLETE-APK
-          path: FOUND-v3.2.7-COMPLETE.apk
+          name: FOUND-v3.2.8-COMPLETE-APK
+          path: FOUND-v3.2.8-COMPLETE.apk
           if-no-files-found: error
           retention-days: 30
