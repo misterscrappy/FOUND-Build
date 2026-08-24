@@ -1,4 +1,5 @@
 name: Build FOUND Complete APK
+# Observable v3.2.8 build trigger
 
 on:
   workflow_dispatch:
@@ -54,7 +55,6 @@ jobs:
           grep -q 'REMOVE LISTING' app/src/main/assets/js/ui/market-listing-forward-actions.js
           grep -q 'cancel_listing' app/src/main/assets/js/ui/market-listing-forward-actions.js
           ! grep -q 'confirm("Remove this stamp listing from the Postal Exchange?' app/src/main/assets/js/ui/market-listing-forward-actions.js
-          grep -q 'data-found-tab="weekly"' app/src/main/assets/js/ui/collector-page-tab-cleanup.js || true
           grep -q 'data-found-tab="profile"' app/src/main/assets/js/ui/collector-page-tab-cleanup.js
           ! grep -q 'settings-popup-controller.js' app/src/main/assets/js/runtime/approved.js
           ! grep -q 'android-safe-album-inspector.js' app/src/main/assets/js/runtime/approved.js
