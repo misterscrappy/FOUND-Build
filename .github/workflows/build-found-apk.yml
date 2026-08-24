@@ -66,7 +66,7 @@ jobs:
           grep -q 'REMOVE LISTING' app/src/main/assets/js/ui/market-listing-forward-actions.js
           grep -q 'cancel_listing' app/src/main/assets/js/ui/market-listing-forward-actions.js
           grep -q 'set_favorite_collectible' app/src/main/assets/js/ui/profile-showcase-editor.js
-          grep -q 'get_collectible_provenance' app/src/main/assets/js/ui/album-detail-actions.js
+          grep -Fq 'services()?.provenance?.(selected.collectible_id' app/src/main/assets/js/ui/album-detail-actions.js
           grep -q '#083a43' app/src/main/assets/css/collector-blue-balance.css
 
           grep -q 'webgl-stamp-alpha-smoothing.js' app/src/main/assets/js/runtime/approved.js
@@ -147,7 +147,7 @@ jobs:
           unzip -p "$APK" assets/js/ui/profile-showcase-owned-fallback.js | grep -q 'data-showcase-choose'
           unzip -p "$APK" assets/js/ui/collector-page-tab-routing.js | grep -q 'FOUND_COLLECTOR_PAGES.open(tab)'
           unzip -p "$APK" assets/js/ui/profile-showcase-editor.js | grep -q 'set_favorite_collectible'
-          unzip -p "$APK" assets/js/ui/album-detail-actions.js | grep -q 'get_collectible_provenance'
+          unzip -p "$APK" assets/js/ui/album-detail-actions.js | grep -Fq 'services()?.provenance?.(selected.collectible_id'
           unzip -p "$APK" assets/css/collector-blue-balance.css | grep -q '#083a43'
           unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'collector-page-tab-routing.js'
           unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'profile-showcase-owned-fallback.js'
