@@ -117,3 +117,5 @@ jobs:
           path: FOUND-v3.2.2-COMPLETE.apk
           if-no-files-found: error
           retention-days: 30
+
+# Observable build trigger
