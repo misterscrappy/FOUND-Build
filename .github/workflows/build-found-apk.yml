@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: misterscrappy/FOUND
-          ref: 83a7256d39ea5fb920e70c6b31beed801a266d3d
+          ref: 4cf44525af3d78faeac946c2ef8aecb9224ac48a
           token: ${{ secrets.FOUND_PRIVATE_REPO_TOKEN }}
           path: source
           persist-credentials: false
@@ -26,15 +26,16 @@ jobs:
         working-directory: source
         run: |
           set -euxo pipefail
-          test "$(git rev-parse HEAD)" = "83a7256d39ea5fb920e70c6b31beed801a266d3d"
-          grep -Fq 'versionCode 82' app/build.gradle
-          grep -Fq "versionName '3.2.16'" app/build.gradle
+          test "$(git rev-parse HEAD)" = "4cf44525af3d78faeac946c2ef8aecb9224ac48a"
+          grep -Fq 'versionCode 83' app/build.gradle
+          grep -Fq "versionName '3.2.17'" app/build.gradle
 
           for f in \
             app/src/main/assets/js/runtime/pending-list-19-30.js \
             app/src/main/assets/js/runtime/stamp-surface-integrity-v4.js \
             app/src/main/assets/js/runtime/stamp-autospin-tuning.js \
             app/src/main/assets/js/runtime/splash-3s-guard.js \
+            app/src/main/assets/js/runtime/progression-reward-integrity.js \
             app/src/main/assets/js/ui/collector-render-stability-guard.js \
             app/src/main/assets/js/ui/profile-showcase-stable.js \
             app/src/main/assets/js/ui/market-listing-provenance.js \
@@ -44,41 +45,74 @@ jobs:
             app/src/main/assets/js/ui/settings-order-polish.js \
             app/src/main/assets/js/ui/watch-market-confirmation.js \
             app/src/main/assets/js/ui/postal-search-button-sizing.js \
+            app/src/main/assets/js/ui/field-map-footer-layout.js \
+            app/src/main/assets/js/ui/support-center.js \
+            app/src/main/assets/js/ui/collector-page-router.js \
+            app/src/main/assets/js/ui/collector-page-tab-cleanup.js \
+            app/src/main/assets/js/ui/collector-page-tab-routing.js \
             database/found_v3216_return_to_circulation.sql \
+            database/found_v3217_support_rewards_provenance.sql \
+            database/found_v3217_progression_reward_sync.sql \
             database/found_v320_z_allow_single_copy_stamp_transfers.sql; do test -f "$f"; done
 
-          node --check app/src/main/assets/js/ui/provenance-cancel-filter.js
-          node --check app/src/main/assets/js/ui/admin-return-circulation.js
-          node --check app/src/main/assets/js/ui/postal-my-stamps-preview.js
-          node --check app/src/main/assets/js/ui/settings-order-polish.js
-          node --check app/src/main/assets/js/runtime/stamp-autospin-tuning.js
+          for f in \
+            app/src/main/assets/js/runtime/progression-reward-integrity.js \
+            app/src/main/assets/js/ui/support-center.js \
+            app/src/main/assets/js/ui/field-map-footer-layout.js \
+            app/src/main/assets/js/ui/provenance-cancel-filter.js \
+            app/src/main/assets/js/ui/collector-page-router.js \
+            app/src/main/assets/js/ui/collector-page-tab-cleanup.js \
+            app/src/main/assets/js/ui/collector-page-tab-routing.js \
+            app/src/main/assets/js/runtime/approved.js; do node --check "$f"; done
 
-          grep -Fq '__FOUND_PROVENANCE_CANCEL_FILTER__' app/src/main/assets/js/ui/provenance-cancel-filter.js
-          grep -Fq 'LISTING CANCELLED' app/src/main/assets/js/ui/provenance-cancel-filter.js
-          grep -Fq 'admin_return_limited_to_circulation' database/found_v3216_return_to_circulation.sql
-          grep -Fq "'circulation_pool',true" database/found_v3216_return_to_circulation.sql
-          grep -Fq "'provenance_visible_from'" database/found_v3216_return_to_circulation.sql
-          grep -Fq "e.event_type <> 'listing_cancelled'" database/found_v3216_return_to_circulation.sql
-          grep -Fq "source='circulation_reissue'" database/found_v3216_return_to_circulation.sql
-          grep -Fq 'for update skip locked' database/found_v3216_return_to_circulation.sql
-          grep -Fq 'admin_test_limited_not_eligible' database/found_v3216_return_to_circulation.sql
-          grep -Fq 'RETURN TO CIRCULATION' app/src/main/assets/js/ui/admin-return-circulation.js
-          grep -Fq 'admin_return_limited_to_circulation' app/src/main/assets/js/ui/admin-return-circulation.js
-          grep -Fq 'item?.metadata?.admin_test !== true' app/src/main/assets/js/ui/admin-return-circulation.js
-          grep -Fq "[data-mp-panel='inventory'] .mpRow" app/src/main/assets/js/ui/postal-my-stamps-preview.js
-          grep -Fq 'foundStampPreview19' app/src/main/assets/js/ui/postal-my-stamps-preview.js
-          grep -Fq '/gold foil/i.test(title)' app/src/main/assets/js/ui/postal-my-stamps-preview.js
-          grep -Fq 'COLLECTOR USERNAME' app/src/main/assets/js/ui/settings-order-polish.js
-          grep -Fq 'PLAYER QOL' app/src/main/assets/js/ui/settings-order-polish.js
-          grep -Fq 'LOCATION PRIVACY' app/src/main/assets/js/ui/settings-order-polish.js
-          grep -Fq 'ACCOUNT SAVE' app/src/main/assets/js/ui/settings-order-polish.js
-          grep -Fq 'COLLECTOR ACCOUNT' app/src/main/assets/js/ui/settings-order-polish.js
-          grep -Fq 'foundSettingsAccountSaveCompact' app/src/main/assets/js/ui/settings-order-polish.js
-          grep -Fq '__foundAutoSpinTimeBasedV2' app/src/main/assets/js/runtime/stamp-autospin-tuning.js
-          grep -Fq 'MIN_SPLASH_MS = 3000' app/src/main/assets/js/runtime/splash-3s-guard.js
+          grep -Fq '__FOUND_SUPPORT_CENTER_V1__' app/src/main/assets/js/ui/support-center.js
+          grep -Fq 'REPORT A PROBLEM' app/src/main/assets/js/ui/support-center.js
+          grep -Fq 'MY REPORTS' app/src/main/assets/js/ui/support-center.js
+          grep -Fq 'PLAYER REPORTS' app/src/main/assets/js/ui/support-center.js
+          grep -Fq 'RECENT CLIENT ERRORS' app/src/main/assets/js/ui/support-center.js
+          grep -Fq 'SUBMITTED' app/src/main/assets/js/ui/support-center.js
+          grep -Fq 'REVIEWING' app/src/main/assets/js/ui/support-center.js
+          grep -Fq 'RESOLVED' app/src/main/assets/js/ui/support-center.js
+          grep -Fq 'COLLECTOR DETAILS' app/src/main/assets/js/ui/support-center.js
+          grep -Fq 'Add a short collector bio.' app/src/main/assets/js/ui/support-center.js
+          grep -Fq 'save.textContent = "SAVE"' app/src/main/assets/js/ui/support-center.js
+          grep -Fq 'client_version:"3.2.17"' app/src/main/assets/js/ui/support-center.js
+          grep -Fq 'recent_client_errors' app/src/main/assets/js/ui/support-center.js
+
+          grep -Fq '__FOUND_FIELD_MAP_FOOTER_LAYOUT_V1__' app/src/main/assets/js/ui/field-map-footer-layout.js
+          grep -Fq 'TAP A STATE TO OPEN ITS FIELD MAP' app/src/main/assets/js/ui/field-map-footer-layout.js
+          grep -Fq 'DRAG • PINCH • ZOOM' app/src/main/assets/js/ui/field-map-footer-layout.js
+          grep -Fq 'NOT TO SCALE - LOCATIONS NOT GEOGRAPHICALLY ACCURATE' app/src/main/assets/js/ui/field-map-footer-layout.js
+          grep -Fq 'TAP THE LIVE DESTINATION ZONES NUMBERED ON THE FIELD MAP' app/src/main/assets/js/ui/field-map-footer-layout.js
+          grep -Fq 'Original digital souvenirs • Not valid postage • Not issued or endorsed by a postal authority' app/src/main/assets/js/ui/field-map-footer-layout.js
+          grep -Fq 'foundPostalExchangeLegal' app/src/main/assets/js/ui/field-map-footer-layout.js
+
+          grep -Fq '__FOUND_PROGRESSION_REWARD_INTEGRITY_V1__' app/src/main/assets/js/runtime/progression-reward-integrity.js
+          grep -Fq 'ack_progression_reward_baseline' app/src/main/assets/js/runtime/progression-reward-integrity.js
+          grep -Fq '+15 XP' app/src/main/assets/js/runtime/progression-reward-integrity.js
+          grep -Fq 'claim_weekly_objective' app/src/main/assets/js/runtime/progression-reward-integrity.js
+          grep -Fq 'claim_achievement' app/src/main/assets/js/runtime/progression-reward-integrity.js
+
+          grep -Fq '"LISTED"' app/src/main/assets/js/ui/provenance-cancel-filter.js
+          grep -Fq 'LISTING REMOVED' app/src/main/assets/js/ui/provenance-cancel-filter.js
+          grep -Fq "e.event_type not in ('listed','listing_cancelled','listing_canceled','listing_removed')" database/found_v3217_support_rewards_provenance.sql
+          grep -Fq 'submit_support_report' database/found_v3217_support_rewards_provenance.sql
+          grep -Fq 'get_my_support_reports' database/found_v3217_support_rewards_provenance.sql
+          grep -Fq 'admin_get_support_reports' database/found_v3217_support_rewards_provenance.sql
+          grep -Fq 'admin_update_support_report_status' database/found_v3217_support_rewards_provenance.sql
+          grep -Fq 'ack_progression_reward_baseline' database/found_v3217_progression_reward_sync.sql
+          grep -Fq 'Do not advance last_client_coins here' database/found_v3217_progression_reward_sync.sql
+          grep -Fq 'XP is never spent' database/found_v3217_progression_reward_sync.sql
           grep -Fq 'select count(*)::integer' database/found_v320_z_allow_single_copy_stamp_transfers.sql
 
+          grep -Fq '"support", "admin"' app/src/main/assets/js/ui/collector-page-router.js
+          grep -Fq 'data-found-tab="support"' app/src/main/assets/js/ui/collector-page-tab-cleanup.js
+          grep -Fq '"support", "admin"' app/src/main/assets/js/ui/collector-page-tab-routing.js
+
           for marker in \
+            'field-map-footer-layout.js' \
+            'progression-reward-integrity.js' \
+            'support-center.js' \
             'provenance-cancel-filter.js' \
             'admin-return-circulation.js' \
             'postal-my-stamps-preview.js' \
@@ -89,6 +123,12 @@ jobs:
             'market-listing-provenance.js' \
             'watch-market-confirmation.js' \
             'postal-search-button-sizing.js'; do grep -Fq "$marker" app/src/main/assets/js/runtime/approved.js; done
+
+          grep -Fq 'admin_return_limited_to_circulation' database/found_v3216_return_to_circulation.sql
+          grep -Fq "'circulation_pool',true" database/found_v3216_return_to_circulation.sql
+          grep -Fq "source='circulation_reissue'" database/found_v3216_return_to_circulation.sql
+          grep -Fq '__foundAutoSpinTimeBasedV2' app/src/main/assets/js/runtime/stamp-autospin-tuning.js
+          grep -Fq 'MIN_SPLASH_MS = 3000' app/src/main/assets/js/runtime/splash-3s-guard.js
 
           ! grep -Fq 'src="js/runtime/stamp-surface-integrity.js"' app/src/main/assets/js/runtime/approved.js
           ! grep -Fq 'settings-popup-controller.js' app/src/main/assets/js/runtime/approved.js
@@ -131,6 +171,9 @@ jobs:
             assets/js/runtime/stamp-surface-integrity-v4.js \
             assets/js/runtime/stamp-autospin-tuning.js \
             assets/js/runtime/splash-3s-guard.js \
+            assets/js/runtime/progression-reward-integrity.js \
+            assets/js/ui/support-center.js \
+            assets/js/ui/field-map-footer-layout.js \
             assets/js/ui/provenance-cancel-filter.js \
             assets/js/ui/admin-return-circulation.js \
             assets/js/ui/postal-my-stamps-preview.js \
@@ -139,13 +182,19 @@ jobs:
             assets/js/ui/watch-market-confirmation.js \
             assets/js/ui/profile-showcase-stable.js; do unzip -l "$APK" | grep -F "$f"; done
 
-          unzip -p "$APK" assets/js/ui/provenance-cancel-filter.js | grep -Fq '__FOUND_PROVENANCE_CANCEL_FILTER__'
+          unzip -p "$APK" assets/js/ui/support-center.js | grep -Fq '__FOUND_SUPPORT_CENTER_V1__'
+          unzip -p "$APK" assets/js/ui/support-center.js | grep -Fq 'MY REPORTS'
+          unzip -p "$APK" assets/js/ui/support-center.js | grep -Fq 'PLAYER REPORTS'
+          unzip -p "$APK" assets/js/ui/field-map-footer-layout.js | grep -Fq 'NOT TO SCALE - LOCATIONS NOT GEOGRAPHICALLY ACCURATE'
+          unzip -p "$APK" assets/js/ui/field-map-footer-layout.js | grep -Fq 'DRAG • PINCH • ZOOM'
+          unzip -p "$APK" assets/js/runtime/progression-reward-integrity.js | grep -Fq 'ack_progression_reward_baseline'
+          unzip -p "$APK" assets/js/ui/provenance-cancel-filter.js | grep -Fq '"LISTED"'
           unzip -p "$APK" assets/js/ui/admin-return-circulation.js | grep -Fq 'admin_return_limited_to_circulation'
           unzip -p "$APK" assets/js/ui/postal-my-stamps-preview.js | grep -Fq 'foundStampPreview19'
           unzip -p "$APK" assets/js/ui/settings-order-polish.js | grep -Fq 'foundSettingsAccountSaveCompact'
           unzip -p "$APK" assets/js/runtime/stamp-autospin-tuning.js | grep -Fq '__foundAutoSpinTimeBasedV2'
           unzip -p "$APK" assets/js/runtime/splash-3s-guard.js | grep -Fq 'MIN_SPLASH_MS = 3000'
-          for marker in provenance-cancel-filter.js admin-return-circulation.js postal-my-stamps-preview.js settings-order-polish.js stamp-surface-integrity-v4.js; do unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq "$marker"; done
+          for marker in field-map-footer-layout.js progression-reward-integrity.js support-center.js provenance-cancel-filter.js admin-return-circulation.js postal-my-stamps-preview.js settings-order-polish.js stamp-surface-integrity-v4.js; do unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq "$marker"; done
           ! unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq 'src="js/runtime/stamp-surface-integrity.js"'
           ! unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq 'settings-popup-controller.js'
 
@@ -160,13 +209,13 @@ jobs:
 
       - name: Package APK
         run: |
-          cp source/app/build/outputs/apk/debug/app-debug.apk FOUND-v3.2.16-COMPLETE.apk
-          sha256sum FOUND-v3.2.16-COMPLETE.apk
+          cp source/app/build/outputs/apk/debug/app-debug.apk FOUND-v3.2.17-COMPLETE.apk
+          sha256sum FOUND-v3.2.17-COMPLETE.apk
 
       - name: Upload complete APK
         uses: actions/upload-artifact@v4
         with:
-          name: FOUND-v3.2.16-COMPLETE-APK
-          path: FOUND-v3.2.16-COMPLETE.apk
+          name: FOUND-v3.2.17-COMPLETE-APK
+          path: FOUND-v3.2.17-COMPLETE.apk
           if-no-files-found: error
           retention-days: 30
