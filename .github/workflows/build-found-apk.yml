@@ -2,14 +2,9 @@ name: Build FOUND Complete APK
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ main ]
-    paths:
-      - '.github/workflows/build-found-apk.yml'
   pull_request:
     branches: [ main ]
-    paths:
-      - '.github/workflows/build-found-apk.yml'
+    paths: ['.github/workflows/build-found-apk.yml']
 
 permissions:
   contents: read
@@ -17,50 +12,90 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout private FOUND source
         uses: actions/checkout@v4
         with:
           repository: misterscrappy/FOUND
-          ref: 6c02166d8adb37ca65b745ad9edf523c5ff90578
+          ref: 83a7256d39ea5fb920e70c6b31beed801a266d3d
           token: ${{ secrets.FOUND_PRIVATE_REPO_TOKEN }}
           path: source
           persist-credentials: false
 
-      - name: Verify complete source
+      - name: Verify exact forward source
         working-directory: source
         run: |
-          test -f app/src/main/assets/js/runtime/pending-list-19-30.js
-          test -f app/src/main/assets/js/runtime/base-alpha-forward.js
-          test -f app/src/main/assets/js/runtime/post-office-mailbox-sales.js
-          test -f app/src/main/assets/js/runtime/stamp-surface-integrity.js
-          test -f app/src/main/assets/js/runtime/stamp-detail-performance.js
-          test -f app/src/main/assets/js/runtime/collector-detail-loop-guard.js
-          test -f app/src/main/assets/js/runtime/stamp-autospin-tuning.js
-          test -f app/src/main/assets/js/ui/market-listing-detail.js
-          test -f app/src/main/assets/js/ui/collector-page-router.js
-          test -f app/src/main/assets/js/ui/collector-page-tab-cleanup.js
-          test -f app/src/main/assets/js/ui/market-listing-forward-actions.js
-          grep -q 'pending-list-19-30.js' app/src/main/assets/js/runtime/approved.js
-          grep -q '__foundDetailLoopGuardV2' app/src/main/assets/js/runtime/collector-detail-loop-guard.js
-          grep -q 'stamp-autospin-tuning.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'DETAIL_EXTRA_SPIN = 0.0011' app/src/main/assets/js/runtime/stamp-autospin-tuning.js
-          grep -q 'collector-page-router.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'collector-page-tab-cleanup.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'market-listing-forward-actions.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'foundListingRemoveConfirm' app/src/main/assets/js/ui/market-listing-forward-actions.js
-          grep -q 'KEEP LISTED' app/src/main/assets/js/ui/market-listing-forward-actions.js
-          grep -q 'REMOVE LISTING' app/src/main/assets/js/ui/market-listing-forward-actions.js
-          grep -q 'cancel_listing' app/src/main/assets/js/ui/market-listing-forward-actions.js
-          ! grep -q 'confirm("Remove this stamp listing from the Postal Exchange?' app/src/main/assets/js/ui/market-listing-forward-actions.js
-          grep -q 'data-found-tab="weekly"' app/src/main/assets/js/ui/collector-page-tab-cleanup.js || true
-          grep -q 'data-found-tab="profile"' app/src/main/assets/js/ui/collector-page-tab-cleanup.js
-          ! grep -q 'settings-popup-controller.js' app/src/main/assets/js/runtime/approved.js
-          ! grep -q 'android-safe-album-inspector.js' app/src/main/assets/js/runtime/approved.js
-          ! grep -q 'album-detail-open-guard.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'versionCode 74' app/build.gradle
-          grep -q "versionName '3.2.8'" app/build.gradle
+          set -euxo pipefail
+          test "$(git rev-parse HEAD)" = "83a7256d39ea5fb920e70c6b31beed801a266d3d"
+          grep -Fq 'versionCode 82' app/build.gradle
+          grep -Fq "versionName '3.2.16'" app/build.gradle
+
+          for f in \
+            app/src/main/assets/js/runtime/pending-list-19-30.js \
+            app/src/main/assets/js/runtime/stamp-surface-integrity-v4.js \
+            app/src/main/assets/js/runtime/stamp-autospin-tuning.js \
+            app/src/main/assets/js/runtime/splash-3s-guard.js \
+            app/src/main/assets/js/ui/collector-render-stability-guard.js \
+            app/src/main/assets/js/ui/profile-showcase-stable.js \
+            app/src/main/assets/js/ui/market-listing-provenance.js \
+            app/src/main/assets/js/ui/provenance-cancel-filter.js \
+            app/src/main/assets/js/ui/admin-return-circulation.js \
+            app/src/main/assets/js/ui/postal-my-stamps-preview.js \
+            app/src/main/assets/js/ui/settings-order-polish.js \
+            app/src/main/assets/js/ui/watch-market-confirmation.js \
+            app/src/main/assets/js/ui/postal-search-button-sizing.js \
+            database/found_v3216_return_to_circulation.sql \
+            database/found_v320_z_allow_single_copy_stamp_transfers.sql; do test -f "$f"; done
+
+          node --check app/src/main/assets/js/ui/provenance-cancel-filter.js
+          node --check app/src/main/assets/js/ui/admin-return-circulation.js
+          node --check app/src/main/assets/js/ui/postal-my-stamps-preview.js
+          node --check app/src/main/assets/js/ui/settings-order-polish.js
+          node --check app/src/main/assets/js/runtime/stamp-autospin-tuning.js
+
+          grep -Fq '__FOUND_PROVENANCE_CANCEL_FILTER__' app/src/main/assets/js/ui/provenance-cancel-filter.js
+          grep -Fq 'LISTING CANCELLED' app/src/main/assets/js/ui/provenance-cancel-filter.js
+          grep -Fq 'admin_return_limited_to_circulation' database/found_v3216_return_to_circulation.sql
+          grep -Fq "'circulation_pool',true" database/found_v3216_return_to_circulation.sql
+          grep -Fq "'provenance_visible_from'" database/found_v3216_return_to_circulation.sql
+          grep -Fq "e.event_type <> 'listing_cancelled'" database/found_v3216_return_to_circulation.sql
+          grep -Fq "source='circulation_reissue'" database/found_v3216_return_to_circulation.sql
+          grep -Fq 'for update skip locked' database/found_v3216_return_to_circulation.sql
+          grep -Fq 'admin_test_limited_not_eligible' database/found_v3216_return_to_circulation.sql
+          grep -Fq 'RETURN TO CIRCULATION' app/src/main/assets/js/ui/admin-return-circulation.js
+          grep -Fq 'admin_return_limited_to_circulation' app/src/main/assets/js/ui/admin-return-circulation.js
+          grep -Fq 'item?.metadata?.admin_test !== true' app/src/main/assets/js/ui/admin-return-circulation.js
+          grep -Fq "[data-mp-panel='inventory'] .mpRow" app/src/main/assets/js/ui/postal-my-stamps-preview.js
+          grep -Fq 'foundStampPreview19' app/src/main/assets/js/ui/postal-my-stamps-preview.js
+          grep -Fq '/gold foil/i.test(title)' app/src/main/assets/js/ui/postal-my-stamps-preview.js
+          grep -Fq 'COLLECTOR USERNAME' app/src/main/assets/js/ui/settings-order-polish.js
+          grep -Fq 'PLAYER QOL' app/src/main/assets/js/ui/settings-order-polish.js
+          grep -Fq 'LOCATION PRIVACY' app/src/main/assets/js/ui/settings-order-polish.js
+          grep -Fq 'ACCOUNT SAVE' app/src/main/assets/js/ui/settings-order-polish.js
+          grep -Fq 'COLLECTOR ACCOUNT' app/src/main/assets/js/ui/settings-order-polish.js
+          grep -Fq 'foundSettingsAccountSaveCompact' app/src/main/assets/js/ui/settings-order-polish.js
+          grep -Fq '__foundAutoSpinTimeBasedV2' app/src/main/assets/js/runtime/stamp-autospin-tuning.js
+          grep -Fq 'MIN_SPLASH_MS = 3000' app/src/main/assets/js/runtime/splash-3s-guard.js
+          grep -Fq 'select count(*)::integer' database/found_v320_z_allow_single_copy_stamp_transfers.sql
+
+          for marker in \
+            'provenance-cancel-filter.js' \
+            'admin-return-circulation.js' \
+            'postal-my-stamps-preview.js' \
+            'settings-order-polish.js' \
+            'stamp-surface-integrity-v4.js' \
+            'collector-render-stability-guard.js' \
+            'profile-showcase-stable.js' \
+            'market-listing-provenance.js' \
+            'watch-market-confirmation.js' \
+            'postal-search-button-sizing.js'; do grep -Fq "$marker" app/src/main/assets/js/runtime/approved.js; done
+
+          ! grep -Fq 'src="js/runtime/stamp-surface-integrity.js"' app/src/main/assets/js/runtime/approved.js
+          ! grep -Fq 'settings-popup-controller.js' app/src/main/assets/js/runtime/approved.js
+          ! grep -Fq 'profile-showcase-editor.js' app/src/main/assets/js/runtime/approved.js
+          ! grep -Fq 'profile-showcase-owned-fallback.js' app/src/main/assets/js/runtime/approved.js
+          ! grep -Fq 'android-safe-album-inspector.js' app/src/main/assets/js/runtime/approved.js
+          ! grep -Fq 'album-detail-open-guard.js' app/src/main/assets/js/runtime/approved.js
 
       - name: Set up Java 17
         uses: actions/setup-java@v5
@@ -73,86 +108,65 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Restore FOUND signing key
+      - name: Restore and verify signing key
         working-directory: source
         run: |
-          base64 --decode .github/signing/found-alpha-debug.keystore.b64 \
-            > .github/signing/found-alpha-debug.keystore
+          base64 --decode .github/signing/found-alpha-debug.keystore.b64 > .github/signing/found-alpha-debug.keystore
           chmod 600 .github/signing/found-alpha-debug.keystore
-
-          FINGERPRINT="$(keytool -list -v \
-            -keystore .github/signing/found-alpha-debug.keystore \
-            -storepass android \
-            -alias androiddebugkey 2>/dev/null \
-            | sed -n 's/^[[:space:]]*SHA256: //p' \
-            | tr -d ':' \
-            | head -n 1)"
-
-          test "$FINGERPRINT" = \
-            "678E0BF28B640EC68C9103DBC1ED33946ECB32D6AA8B16F3CD2A6ACDA459247E"
+          FINGERPRINT="$(keytool -list -v -keystore .github/signing/found-alpha-debug.keystore -storepass android -alias androiddebugkey 2>/dev/null | sed -n 's/^[[:space:]]*SHA256: //p' | tr -d ':' | head -n1)"
+          test "$FINGERPRINT" = "678E0BF28B640EC68C9103DBC1ED33946ECB32D6AA8B16F3CD2A6ACDA459247E"
 
       - name: Build complete APK
         working-directory: source
         run: gradle :app:assembleDebug --stacktrace
 
-      - name: Verify APK contents
+      - name: Verify packaged APK
         working-directory: source
         run: |
+          set -euxo pipefail
           APK=app/build/outputs/apk/debug/app-debug.apk
           unzip -t "$APK"
-          unzip -l "$APK" | grep -F 'assets/js/runtime/pending-list-19-30.js'
-          unzip -l "$APK" | grep -F 'assets/js/runtime/base-alpha-forward.js'
-          unzip -l "$APK" | grep -F 'assets/js/runtime/post-office-mailbox-sales.js'
-          unzip -l "$APK" | grep -F 'assets/js/runtime/stamp-surface-integrity.js'
-          unzip -l "$APK" | grep -F 'assets/js/runtime/stamp-detail-performance.js'
-          unzip -l "$APK" | grep -F 'assets/js/runtime/collector-detail-loop-guard.js'
-          unzip -l "$APK" | grep -F 'assets/js/runtime/stamp-autospin-tuning.js'
-          unzip -l "$APK" | grep -F 'assets/js/ui/market-listing-detail.js'
-          unzip -l "$APK" | grep -F 'assets/js/ui/collector-page-router.js'
-          unzip -l "$APK" | grep -F 'assets/js/ui/collector-page-tab-cleanup.js'
-          unzip -l "$APK" | grep -F 'assets/js/ui/market-listing-forward-actions.js'
-          unzip -p "$APK" assets/js/runtime/collector-detail-loop-guard.js | grep -q '__foundDetailLoopGuardV2'
-          unzip -p "$APK" assets/js/runtime/stamp-autospin-tuning.js | grep -q 'DETAIL_EXTRA_SPIN = 0.0011'
-          unzip -p "$APK" assets/js/ui/market-listing-forward-actions.js | grep -q 'foundListingRemoveConfirm'
-          unzip -p "$APK" assets/js/ui/market-listing-forward-actions.js | grep -q 'KEEP LISTED'
-          unzip -p "$APK" assets/js/ui/market-listing-forward-actions.js | grep -q 'cancel_listing'
-          unzip -p "$APK" assets/js/ui/collector-page-tab-cleanup.js | grep -q 'data-found-tab="profile"'
-          unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'collector-page-tab-cleanup.js'
-          unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'market-listing-forward-actions.js'
-          unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'stamp-autospin-tuning.js'
-          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'settings-popup-controller.js'
-          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'android-safe-album-inspector.js'
-          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'album-detail-open-guard.js'
+          for f in \
+            assets/js/runtime/pending-list-19-30.js \
+            assets/js/runtime/stamp-surface-integrity-v4.js \
+            assets/js/runtime/stamp-autospin-tuning.js \
+            assets/js/runtime/splash-3s-guard.js \
+            assets/js/ui/provenance-cancel-filter.js \
+            assets/js/ui/admin-return-circulation.js \
+            assets/js/ui/postal-my-stamps-preview.js \
+            assets/js/ui/settings-order-polish.js \
+            assets/js/ui/market-listing-provenance.js \
+            assets/js/ui/watch-market-confirmation.js \
+            assets/js/ui/profile-showcase-stable.js; do unzip -l "$APK" | grep -F "$f"; done
+
+          unzip -p "$APK" assets/js/ui/provenance-cancel-filter.js | grep -Fq '__FOUND_PROVENANCE_CANCEL_FILTER__'
+          unzip -p "$APK" assets/js/ui/admin-return-circulation.js | grep -Fq 'admin_return_limited_to_circulation'
+          unzip -p "$APK" assets/js/ui/postal-my-stamps-preview.js | grep -Fq 'foundStampPreview19'
+          unzip -p "$APK" assets/js/ui/settings-order-polish.js | grep -Fq 'foundSettingsAccountSaveCompact'
+          unzip -p "$APK" assets/js/runtime/stamp-autospin-tuning.js | grep -Fq '__foundAutoSpinTimeBasedV2'
+          unzip -p "$APK" assets/js/runtime/splash-3s-guard.js | grep -Fq 'MIN_SPLASH_MS = 3000'
+          for marker in provenance-cancel-filter.js admin-return-circulation.js postal-my-stamps-preview.js settings-order-polish.js stamp-surface-integrity-v4.js; do unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq "$marker"; done
+          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq 'src="js/runtime/stamp-surface-integrity.js"'
+          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq 'settings-popup-controller.js'
 
       - name: Verify signing certificate
         working-directory: source
         run: |
-          APKSIGNER="$(find "$ANDROID_HOME/build-tools" \
-            -type f -name apksigner | sort -V | tail -n 1)"
-
-          CERT_OUT="$($APKSIGNER verify --verbose --print-certs \
-            app/build/outputs/apk/debug/app-debug.apk 2>&1)"
-
+          APKSIGNER="$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -n1)"
+          CERT_OUT="$($APKSIGNER verify --verbose --print-certs app/build/outputs/apk/debug/app-debug.apk 2>&1)"
           printf '%s\n' "$CERT_OUT"
-
-          CERT_SHA="$(printf '%s\n' "$CERT_OUT" \
-            | grep -i -m1 'certificate.*sha-256.*digest' \
-            | sed -E 's/.*:[[:space:]]*//' \
-            | tr -d ':[:space:]' \
-            | tr '[:lower:]' '[:upper:]')"
-
-          test "$CERT_SHA" = \
-            "678E0BF28B640EC68C9103DBC1ED33946ECB32D6AA8B16F3CD2A6ACDA459247E"
+          CERT_SHA="$(printf '%s\n' "$CERT_OUT" | grep -i -m1 'certificate.*sha-256.*digest' | sed -E 's/.*:[[:space:]]*//' | tr -d ':[:space:]' | tr '[:lower:]' '[:upper:]')"
+          test "$CERT_SHA" = "678E0BF28B640EC68C9103DBC1ED33946ECB32D6AA8B16F3CD2A6ACDA459247E"
 
       - name: Package APK
         run: |
-          cp source/app/build/outputs/apk/debug/app-debug.apk \
-             FOUND-v3.2.8-COMPLETE.apk
+          cp source/app/build/outputs/apk/debug/app-debug.apk FOUND-v3.2.16-COMPLETE.apk
+          sha256sum FOUND-v3.2.16-COMPLETE.apk
 
       - name: Upload complete APK
         uses: actions/upload-artifact@v4
         with:
-          name: FOUND-v3.2.8-COMPLETE-APK
-          path: FOUND-v3.2.8-COMPLETE.apk
+          name: FOUND-v3.2.16-COMPLETE-APK
+          path: FOUND-v3.2.16-COMPLETE.apk
           if-no-files-found: error
           retention-days: 30
