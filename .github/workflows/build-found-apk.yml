@@ -54,40 +54,40 @@ jobs:
           test -f app/src/main/assets/css/collector-blue-balance.css
           test -f database/found_v3211_showcase_collectibles_execute.sql
 
-          grep -q '__foundDetailLoopGuardV2' app/src/main/assets/js/runtime/collector-detail-loop-guard.js
-          grep -q 'premultipliedAlpha: true' app/src/main/assets/js/runtime/webgl-stamp-alpha-smoothing.js
-          grep -q 'DETAIL_EXTRA_SPIN = 0.0011' app/src/main/assets/js/runtime/stamp-autospin-tuning.js
-          grep -q '__foundSurfaceIntegrityV3' app/src/main/assets/js/runtime/stamp-surface-integrity.js
-          grep -q 'stableFaceGeometry' app/src/main/assets/js/runtime/stamp-surface-integrity.js
-          grep -q 'FACE_INSET = 0.041' app/src/main/assets/js/runtime/stamp-surface-integrity.js
-          grep -q 'indices: \[0,1,2, 0,2,3\]' app/src/main/assets/js/runtime/stamp-surface-integrity.js
-          grep -q 'gl.enable(gl.CULL_FACE)' app/src/main/assets/js/runtime/stamp-surface-integrity.js
-          grep -q 'gl.disable(gl.BLEND)' app/src/main/assets/js/runtime/stamp-surface-integrity.js
-          ! grep -q 'wallIndices = sourceBody.indices.slice' app/src/main/assets/js/runtime/stamp-surface-integrity.js
-          grep -q 'Gold Foil' app/src/main/assets/js/ui/postal-exchange-gold-filter.js
-          grep -q 'data-mp-panel="inventory"' app/src/main/assets/js/ui/postal-exchange-gold-filter.js
-          grep -q 'scrollIntoView' app/src/main/assets/js/ui/collector-tab-scroll.js
-          grep -q 'touch-action:pan-x' app/src/main/assets/js/ui/collector-tab-scroll.js
-          grep -q 'VERIFIED ORIGIN' app/src/main/assets/js/ui/provenance-presentation-polish.js
-          grep -q 'font:400 36px/1' app/src/main/assets/js/ui/provenance-presentation-polish.js
-          grep -q 'set_favorite_collectible' app/src/main/assets/js/ui/profile-showcase-editor.js
-          grep -q 'get_collectible_provenance' app/src/main/assets/js/ui/album-detail-actions.js
-          grep -q 'grant execute on function public.get_my_collectibles() to authenticated' database/found_v3211_showcase_collectibles_execute.sql
-          grep -q '#083a43' app/src/main/assets/css/collector-blue-balance.css
+          grep -Fq '__foundDetailLoopGuardV2' app/src/main/assets/js/runtime/collector-detail-loop-guard.js
+          grep -Fq 'premultipliedAlpha: true' app/src/main/assets/js/runtime/webgl-stamp-alpha-smoothing.js
+          grep -Fq 'DETAIL_EXTRA_SPIN = 0.0011' app/src/main/assets/js/runtime/stamp-autospin-tuning.js
+          grep -Fq '__foundSurfaceIntegrityV3' app/src/main/assets/js/runtime/stamp-surface-integrity.js
+          grep -Fq 'stableFaceGeometry' app/src/main/assets/js/runtime/stamp-surface-integrity.js
+          grep -Fq 'FACE_INSET = 0.041' app/src/main/assets/js/runtime/stamp-surface-integrity.js
+          grep -Fq 'indices: [0,1,2, 0,2,3]' app/src/main/assets/js/runtime/stamp-surface-integrity.js
+          grep -Fq 'gl.enable(gl.CULL_FACE)' app/src/main/assets/js/runtime/stamp-surface-integrity.js
+          grep -Fq 'gl.disable(gl.BLEND)' app/src/main/assets/js/runtime/stamp-surface-integrity.js
+          ! grep -Fq 'wallIndices = sourceBody.indices.slice' app/src/main/assets/js/runtime/stamp-surface-integrity.js
+          grep -Fq 'Gold Foil' app/src/main/assets/js/ui/postal-exchange-gold-filter.js
+          grep -Fq 'data-mp-panel="inventory"' app/src/main/assets/js/ui/postal-exchange-gold-filter.js
+          grep -Fq 'scrollIntoView' app/src/main/assets/js/ui/collector-tab-scroll.js
+          grep -Fq 'touch-action:pan-x' app/src/main/assets/js/ui/collector-tab-scroll.js
+          grep -Fq 'VERIFIED ORIGIN' app/src/main/assets/js/ui/provenance-presentation-polish.js
+          grep -Fq 'font:400 36px/1' app/src/main/assets/js/ui/provenance-presentation-polish.js
+          grep -Fq 'set_favorite_collectible' app/src/main/assets/js/ui/profile-showcase-editor.js
+          grep -Fq 'services()?.provenance' app/src/main/assets/js/ui/album-detail-actions.js
+          grep -Fq 'grant execute on function public.get_my_collectibles() to authenticated' database/found_v3211_showcase_collectibles_execute.sql
+          grep -Fq '#083a43' app/src/main/assets/css/collector-blue-balance.css
 
-          grep -q 'stamp-surface-integrity.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'postal-exchange-gold-filter.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'collector-page-tab-routing.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'collector-tab-scroll.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'profile-showcase-editor.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'album-detail-actions.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'provenance-presentation-polish.js' app/src/main/assets/js/runtime/approved.js
-          ! grep -q 'profile-showcase-owned-fallback.js' app/src/main/assets/js/runtime/approved.js
-          ! grep -q 'settings-popup-controller.js' app/src/main/assets/js/runtime/approved.js
-          ! grep -q 'android-safe-album-inspector.js' app/src/main/assets/js/runtime/approved.js
-          ! grep -q 'album-detail-open-guard.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'versionCode 77' app/build.gradle
-          grep -q "versionName '3.2.11'" app/build.gradle
+          grep -Fq 'stamp-surface-integrity.js' app/src/main/assets/js/runtime/approved.js
+          grep -Fq 'postal-exchange-gold-filter.js' app/src/main/assets/js/runtime/approved.js
+          grep -Fq 'collector-page-tab-routing.js' app/src/main/assets/js/runtime/approved.js
+          grep -Fq 'collector-tab-scroll.js' app/src/main/assets/js/runtime/approved.js
+          grep -Fq 'profile-showcase-editor.js' app/src/main/assets/js/runtime/approved.js
+          grep -Fq 'album-detail-actions.js' app/src/main/assets/js/runtime/approved.js
+          grep -Fq 'provenance-presentation-polish.js' app/src/main/assets/js/runtime/approved.js
+          ! grep -Fq 'profile-showcase-owned-fallback.js' app/src/main/assets/js/runtime/approved.js
+          ! grep -Fq 'settings-popup-controller.js' app/src/main/assets/js/runtime/approved.js
+          ! grep -Fq 'android-safe-album-inspector.js' app/src/main/assets/js/runtime/approved.js
+          ! grep -Fq 'album-detail-open-guard.js' app/src/main/assets/js/runtime/approved.js
+          grep -Fq 'versionCode 77' app/build.gradle
+          grep -Fq "versionName '3.2.11'" app/build.gradle
 
       - name: Set up Java 17
         uses: actions/setup-java@v5
@@ -148,27 +148,27 @@ jobs:
           unzip -l "$APK" | grep -F 'assets/js/ui/album-detail-action-enable.js'
           unzip -l "$APK" | grep -F 'assets/css/collector-blue-balance.css'
 
-          unzip -p "$APK" assets/js/runtime/stamp-surface-integrity.js | grep -q '__foundSurfaceIntegrityV3'
-          unzip -p "$APK" assets/js/runtime/stamp-surface-integrity.js | grep -q 'stableFaceGeometry'
-          unzip -p "$APK" assets/js/runtime/stamp-surface-integrity.js | grep -q 'indices: \[0,1,2, 0,2,3\]'
-          unzip -p "$APK" assets/js/runtime/stamp-surface-integrity.js | grep -q 'gl.enable(gl.CULL_FACE)'
-          unzip -p "$APK" assets/js/runtime/stamp-surface-integrity.js | grep -q 'gl.disable(gl.BLEND)'
-          ! unzip -p "$APK" assets/js/runtime/stamp-surface-integrity.js | grep -q 'wallIndices = sourceBody.indices.slice'
-          unzip -p "$APK" assets/js/ui/postal-exchange-gold-filter.js | grep -q 'Gold Foil'
-          unzip -p "$APK" assets/js/ui/collector-tab-scroll.js | grep -q 'touch-action:pan-x'
-          unzip -p "$APK" assets/js/ui/provenance-presentation-polish.js | grep -q 'VERIFIED ORIGIN'
-          unzip -p "$APK" assets/js/ui/provenance-presentation-polish.js | grep -q 'font:400 36px/1'
-          unzip -p "$APK" assets/js/ui/profile-showcase-editor.js | grep -q 'set_favorite_collectible'
-          unzip -p "$APK" assets/js/ui/album-detail-actions.js | grep -q 'get_collectible_provenance'
-          unzip -p "$APK" assets/css/collector-blue-balance.css | grep -q '#083a43'
-          unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'stamp-surface-integrity.js'
-          unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'postal-exchange-gold-filter.js'
-          unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'collector-tab-scroll.js'
-          unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'provenance-presentation-polish.js'
-          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'profile-showcase-owned-fallback.js'
-          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'settings-popup-controller.js'
-          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'android-safe-album-inspector.js'
-          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'album-detail-open-guard.js'
+          unzip -p "$APK" assets/js/runtime/stamp-surface-integrity.js | grep -Fq '__foundSurfaceIntegrityV3'
+          unzip -p "$APK" assets/js/runtime/stamp-surface-integrity.js | grep -Fq 'stableFaceGeometry'
+          unzip -p "$APK" assets/js/runtime/stamp-surface-integrity.js | grep -Fq 'indices: [0,1,2, 0,2,3]'
+          unzip -p "$APK" assets/js/runtime/stamp-surface-integrity.js | grep -Fq 'gl.enable(gl.CULL_FACE)'
+          unzip -p "$APK" assets/js/runtime/stamp-surface-integrity.js | grep -Fq 'gl.disable(gl.BLEND)'
+          ! unzip -p "$APK" assets/js/runtime/stamp-surface-integrity.js | grep -Fq 'wallIndices = sourceBody.indices.slice'
+          unzip -p "$APK" assets/js/ui/postal-exchange-gold-filter.js | grep -Fq 'Gold Foil'
+          unzip -p "$APK" assets/js/ui/collector-tab-scroll.js | grep -Fq 'touch-action:pan-x'
+          unzip -p "$APK" assets/js/ui/provenance-presentation-polish.js | grep -Fq 'VERIFIED ORIGIN'
+          unzip -p "$APK" assets/js/ui/provenance-presentation-polish.js | grep -Fq 'font:400 36px/1'
+          unzip -p "$APK" assets/js/ui/profile-showcase-editor.js | grep -Fq 'set_favorite_collectible'
+          unzip -p "$APK" assets/js/ui/album-detail-actions.js | grep -Fq 'services()?.provenance'
+          unzip -p "$APK" assets/css/collector-blue-balance.css | grep -Fq '#083a43'
+          unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq 'stamp-surface-integrity.js'
+          unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq 'postal-exchange-gold-filter.js'
+          unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq 'collector-tab-scroll.js'
+          unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq 'provenance-presentation-polish.js'
+          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq 'profile-showcase-owned-fallback.js'
+          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq 'settings-popup-controller.js'
+          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq 'android-safe-album-inspector.js'
+          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq 'album-detail-open-guard.js'
 
       - name: Verify signing certificate
         working-directory: source
