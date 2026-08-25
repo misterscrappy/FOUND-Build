@@ -2,10 +2,6 @@ name: Build FOUND Complete APK
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ main ]
-    paths:
-      - '.github/workflows/build-found-apk.yml'
   pull_request:
     branches: [ main ]
     paths:
@@ -23,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: misterscrappy/FOUND
-          ref: 6c02166d8adb37ca65b745ad9edf523c5ff90578
+          ref: 7df04a0ebc41ab8aeec085d42e76856f4b8ef6cc
           token: ${{ secrets.FOUND_PRIVATE_REPO_TOKEN }}
           path: source
           persist-credentials: false
@@ -31,36 +27,83 @@ jobs:
       - name: Verify complete source
         working-directory: source
         run: |
+          test "$(git rev-parse HEAD)" = "7df04a0ebc41ab8aeec085d42e76856f4b8ef6cc"
           test -f app/src/main/assets/js/runtime/pending-list-19-30.js
           test -f app/src/main/assets/js/runtime/base-alpha-forward.js
           test -f app/src/main/assets/js/runtime/post-office-mailbox-sales.js
-          test -f app/src/main/assets/js/runtime/stamp-surface-integrity.js
-          test -f app/src/main/assets/js/runtime/stamp-detail-performance.js
           test -f app/src/main/assets/js/runtime/collector-detail-loop-guard.js
+          test -f app/src/main/assets/js/runtime/webgl-stamp-alpha-smoothing.js
+          test -f app/src/main/assets/js/runtime/stamp-detail-performance.js
           test -f app/src/main/assets/js/runtime/stamp-autospin-tuning.js
+          test -f app/src/main/assets/js/runtime/stamp-surface-integrity.js
           test -f app/src/main/assets/js/ui/market-listing-detail.js
+          test -f app/src/main/assets/js/ui/market-listing-forward-actions.js
+          test -f app/src/main/assets/js/ui/postal-exchange-gold-filter.js
+          test -f app/src/main/assets/js/ui/postal-exchange-utility-navigation-v2.js
           test -f app/src/main/assets/js/ui/collector-page-router.js
           test -f app/src/main/assets/js/ui/collector-page-tab-cleanup.js
-          test -f app/src/main/assets/js/ui/market-listing-forward-actions.js
-          grep -q 'pending-list-19-30.js' app/src/main/assets/js/runtime/approved.js
-          grep -q '__foundDetailLoopGuardV2' app/src/main/assets/js/runtime/collector-detail-loop-guard.js
-          grep -q 'stamp-autospin-tuning.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'DETAIL_EXTRA_SPIN = 0.0011' app/src/main/assets/js/runtime/stamp-autospin-tuning.js
-          grep -q 'collector-page-router.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'collector-page-tab-cleanup.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'market-listing-forward-actions.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'foundListingRemoveConfirm' app/src/main/assets/js/ui/market-listing-forward-actions.js
-          grep -q 'KEEP LISTED' app/src/main/assets/js/ui/market-listing-forward-actions.js
-          grep -q 'REMOVE LISTING' app/src/main/assets/js/ui/market-listing-forward-actions.js
-          grep -q 'cancel_listing' app/src/main/assets/js/ui/market-listing-forward-actions.js
-          ! grep -q 'confirm("Remove this stamp listing from the Postal Exchange?' app/src/main/assets/js/ui/market-listing-forward-actions.js
-          grep -q 'data-found-tab="weekly"' app/src/main/assets/js/ui/collector-page-tab-cleanup.js || true
-          grep -q 'data-found-tab="profile"' app/src/main/assets/js/ui/collector-page-tab-cleanup.js
-          ! grep -q 'settings-popup-controller.js' app/src/main/assets/js/runtime/approved.js
-          ! grep -q 'android-safe-album-inspector.js' app/src/main/assets/js/runtime/approved.js
-          ! grep -q 'album-detail-open-guard.js' app/src/main/assets/js/runtime/approved.js
-          grep -q 'versionCode 74' app/build.gradle
-          grep -q "versionName '3.2.8'" app/build.gradle
+          test -f app/src/main/assets/js/ui/collector-page-tab-routing.js
+          test -f app/src/main/assets/js/ui/collector-tab-scroll.js
+          test -f app/src/main/assets/js/ui/collector-page-scroll-fix.js
+          test -f app/src/main/assets/js/ui/profile-showcase-stable.js
+          test -f app/src/main/assets/js/ui/album-detail-actions.js
+          test -f app/src/main/assets/js/ui/provenance-presentation-polish.js
+          test -f app/src/main/assets/js/ui/album-detail-action-enable.js
+          test -f app/src/main/assets/css/collector-blue-balance.css
+          test -f database/found_v3211_showcase_collectibles_execute.sql
+
+          grep -Fq '__foundDetailLoopGuardV2' app/src/main/assets/js/runtime/collector-detail-loop-guard.js
+          grep -Fq 'premultipliedAlpha: true' app/src/main/assets/js/runtime/webgl-stamp-alpha-smoothing.js
+          grep -Fq 'DETAIL_EXTRA_SPIN = 0.0011' app/src/main/assets/js/runtime/stamp-autospin-tuning.js
+          grep -Fq '__foundSurfaceIntegrityV3' app/src/main/assets/js/runtime/stamp-surface-integrity.js
+          grep -Fq 'stableFaceGeometry' app/src/main/assets/js/runtime/stamp-surface-integrity.js
+          grep -Fq 'indices: [0,1,2, 0,2,3]' app/src/main/assets/js/runtime/stamp-surface-integrity.js
+          grep -Fq 'gl.enable(gl.CULL_FACE)' app/src/main/assets/js/runtime/stamp-surface-integrity.js
+          grep -Fq 'gl.disable(gl.BLEND)' app/src/main/assets/js/runtime/stamp-surface-integrity.js
+
+          grep -Fq 'mountAboveMarket' app/src/main/assets/js/ui/postal-exchange-utility-navigation-v2.js
+          grep -Fq 'parent.insertBefore(host, hub)' app/src/main/assets/js/ui/postal-exchange-utility-navigation-v2.js
+          grep -Fq '>SEARCH<' app/src/main/assets/js/ui/postal-exchange-utility-navigation-v2.js
+          grep -Fq '>WATCHLIST<' app/src/main/assets/js/ui/postal-exchange-utility-navigation-v2.js
+          grep -Fq '>RECENT SALES<' app/src/main/assets/js/ui/postal-exchange-utility-navigation-v2.js
+          grep -Fq 'ADVANCED POSTAL SEARCH' app/src/main/assets/js/ui/postal-exchange-utility-navigation-v2.js
+          grep -Fq '#foundRunMarket{display:none!important}' app/src/main/assets/js/ui/postal-exchange-utility-navigation-v2.js
+
+          grep -Fq 'overflow-y:scroll!important' app/src/main/assets/js/ui/collector-page-scroll-fix.js
+          grep -Fq '-webkit-overflow-scrolling:touch!important' app/src/main/assets/js/ui/collector-page-scroll-fix.js
+          grep -Fq 'touch-action:pan-y!important' app/src/main/assets/js/ui/collector-page-scroll-fix.js
+          grep -Fq 'height:0!important' app/src/main/assets/js/ui/collector-page-scroll-fix.js
+
+          grep -Fq 'foundStableShowcaseStyle' app/src/main/assets/js/ui/profile-showcase-stable.js
+          grep -Fq 'get_my_collectibles' app/src/main/assets/js/ui/profile-showcase-stable.js
+          grep -Fq 'set_favorite_collectible' app/src/main/assets/js/ui/profile-showcase-stable.js
+          grep -Fq 'remove_favorite_collectible' app/src/main/assets/js/ui/profile-showcase-stable.js
+          ! grep -Fq 'toDataURL' app/src/main/assets/js/ui/profile-showcase-stable.js
+          ! grep -Fq 'FoundObject3D' app/src/main/assets/js/ui/profile-showcase-stable.js
+
+          grep -Fq 'VERIFIED ORIGIN' app/src/main/assets/js/ui/provenance-presentation-polish.js
+          grep -Fq 'font:400 36px/1' app/src/main/assets/js/ui/provenance-presentation-polish.js
+          grep -Fq 'Gold Foil' app/src/main/assets/js/ui/postal-exchange-gold-filter.js
+          grep -Fq 'grant execute on function public.get_my_collectibles() to authenticated' database/found_v3211_showcase_collectibles_execute.sql
+          grep -Fq '#083a43' app/src/main/assets/css/collector-blue-balance.css
+
+          grep -Fq 'postal-exchange-utility-navigation-v2.js' app/src/main/assets/js/runtime/approved.js
+          grep -Fq 'collector-page-scroll-fix.js' app/src/main/assets/js/runtime/approved.js
+          grep -Fq 'profile-showcase-stable.js' app/src/main/assets/js/runtime/approved.js
+          grep -Fq 'collector-page-tab-routing.js' app/src/main/assets/js/runtime/approved.js
+          grep -Fq 'collector-tab-scroll.js' app/src/main/assets/js/runtime/approved.js
+          grep -Fq 'stamp-surface-integrity.js' app/src/main/assets/js/runtime/approved.js
+          grep -Fq 'postal-exchange-gold-filter.js' app/src/main/assets/js/runtime/approved.js
+          grep -Fq 'provenance-presentation-polish.js' app/src/main/assets/js/runtime/approved.js
+          ! grep -Fq 'src="js/ui/postal-exchange-utility-navigation.js"' app/src/main/assets/js/runtime/approved.js
+          ! grep -Fq 'profile-showcase-editor.js' app/src/main/assets/js/runtime/approved.js
+          ! grep -Fq 'profile-showcase-owned-fallback.js' app/src/main/assets/js/runtime/approved.js
+          ! grep -Fq 'settings-popup-controller.js' app/src/main/assets/js/runtime/approved.js
+          ! grep -Fq 'android-safe-album-inspector.js' app/src/main/assets/js/runtime/approved.js
+          ! grep -Fq 'album-detail-open-guard.js' app/src/main/assets/js/runtime/approved.js
+
+          grep -Fq 'versionCode 79' app/build.gradle
+          grep -Fq "versionName '3.2.13'" app/build.gradle
 
       - name: Set up Java 17
         uses: actions/setup-java@v5
@@ -101,28 +144,32 @@ jobs:
           APK=app/build/outputs/apk/debug/app-debug.apk
           unzip -t "$APK"
           unzip -l "$APK" | grep -F 'assets/js/runtime/pending-list-19-30.js'
-          unzip -l "$APK" | grep -F 'assets/js/runtime/base-alpha-forward.js'
-          unzip -l "$APK" | grep -F 'assets/js/runtime/post-office-mailbox-sales.js'
           unzip -l "$APK" | grep -F 'assets/js/runtime/stamp-surface-integrity.js'
-          unzip -l "$APK" | grep -F 'assets/js/runtime/stamp-detail-performance.js'
-          unzip -l "$APK" | grep -F 'assets/js/runtime/collector-detail-loop-guard.js'
-          unzip -l "$APK" | grep -F 'assets/js/runtime/stamp-autospin-tuning.js'
-          unzip -l "$APK" | grep -F 'assets/js/ui/market-listing-detail.js'
-          unzip -l "$APK" | grep -F 'assets/js/ui/collector-page-router.js'
-          unzip -l "$APK" | grep -F 'assets/js/ui/collector-page-tab-cleanup.js'
-          unzip -l "$APK" | grep -F 'assets/js/ui/market-listing-forward-actions.js'
-          unzip -p "$APK" assets/js/runtime/collector-detail-loop-guard.js | grep -q '__foundDetailLoopGuardV2'
-          unzip -p "$APK" assets/js/runtime/stamp-autospin-tuning.js | grep -q 'DETAIL_EXTRA_SPIN = 0.0011'
-          unzip -p "$APK" assets/js/ui/market-listing-forward-actions.js | grep -q 'foundListingRemoveConfirm'
-          unzip -p "$APK" assets/js/ui/market-listing-forward-actions.js | grep -q 'KEEP LISTED'
-          unzip -p "$APK" assets/js/ui/market-listing-forward-actions.js | grep -q 'cancel_listing'
-          unzip -p "$APK" assets/js/ui/collector-page-tab-cleanup.js | grep -q 'data-found-tab="profile"'
-          unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'collector-page-tab-cleanup.js'
-          unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'market-listing-forward-actions.js'
-          unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'stamp-autospin-tuning.js'
-          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'settings-popup-controller.js'
-          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'android-safe-album-inspector.js'
-          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -q 'album-detail-open-guard.js'
+          unzip -l "$APK" | grep -F 'assets/js/ui/postal-exchange-utility-navigation-v2.js'
+          unzip -l "$APK" | grep -F 'assets/js/ui/collector-page-scroll-fix.js'
+          unzip -l "$APK" | grep -F 'assets/js/ui/profile-showcase-stable.js'
+          unzip -l "$APK" | grep -F 'assets/js/ui/postal-exchange-gold-filter.js'
+          unzip -l "$APK" | grep -F 'assets/js/ui/provenance-presentation-polish.js'
+          unzip -l "$APK" | grep -F 'assets/css/collector-blue-balance.css'
+
+          unzip -p "$APK" assets/js/ui/postal-exchange-utility-navigation-v2.js | grep -Fq 'mountAboveMarket'
+          unzip -p "$APK" assets/js/ui/postal-exchange-utility-navigation-v2.js | grep -Fq 'parent.insertBefore(host, hub)'
+          unzip -p "$APK" assets/js/ui/postal-exchange-utility-navigation-v2.js | grep -Fq '>RECENT SALES<'
+          unzip -p "$APK" assets/js/ui/collector-page-scroll-fix.js | grep -Fq 'overflow-y:scroll!important'
+          unzip -p "$APK" assets/js/ui/collector-page-scroll-fix.js | grep -Fq 'touch-action:pan-y!important'
+          unzip -p "$APK" assets/js/ui/profile-showcase-stable.js | grep -Fq 'foundStableShowcaseStyle'
+          ! unzip -p "$APK" assets/js/ui/profile-showcase-stable.js | grep -Fq 'toDataURL'
+          unzip -p "$APK" assets/js/runtime/stamp-surface-integrity.js | grep -Fq '__foundSurfaceIntegrityV3'
+          unzip -p "$APK" assets/js/ui/provenance-presentation-polish.js | grep -Fq 'VERIFIED ORIGIN'
+          unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq 'postal-exchange-utility-navigation-v2.js'
+          unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq 'collector-page-scroll-fix.js'
+          unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq 'profile-showcase-stable.js'
+          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq 'src="js/ui/postal-exchange-utility-navigation.js"'
+          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq 'profile-showcase-editor.js'
+          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq 'profile-showcase-owned-fallback.js'
+          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq 'settings-popup-controller.js'
+          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq 'android-safe-album-inspector.js'
+          ! unzip -p "$APK" assets/js/runtime/approved.js | grep -Fq 'album-detail-open-guard.js'
 
       - name: Verify signing certificate
         working-directory: source
@@ -132,7 +179,6 @@ jobs:
 
           CERT_OUT="$($APKSIGNER verify --verbose --print-certs \
             app/build/outputs/apk/debug/app-debug.apk 2>&1)"
-
           printf '%s\n' "$CERT_OUT"
 
           CERT_SHA="$(printf '%s\n' "$CERT_OUT" \
@@ -147,12 +193,13 @@ jobs:
       - name: Package APK
         run: |
           cp source/app/build/outputs/apk/debug/app-debug.apk \
-             FOUND-v3.2.8-COMPLETE.apk
+             FOUND-v3.2.13-COMPLETE.apk
+          sha256sum FOUND-v3.2.13-COMPLETE.apk
 
       - name: Upload complete APK
         uses: actions/upload-artifact@v4
         with:
-          name: FOUND-v3.2.8-COMPLETE-APK
-          path: FOUND-v3.2.8-COMPLETE.apk
+          name: FOUND-v3.2.13-COMPLETE-APK
+          path: FOUND-v3.2.13-COMPLETE.apk
           if-no-files-found: error
           retention-days: 30
