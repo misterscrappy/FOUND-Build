@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: misterscrappy/FOUND
-          ref: 4cf44525af3d78faeac946c2ef8aecb9224ac48a
+          ref: 8f2b160cfe1aa1a8dbf9941f107b91786dd56e61
           token: ${{ secrets.FOUND_PRIVATE_REPO_TOKEN }}
           path: source
           persist-credentials: false
@@ -26,9 +26,9 @@ jobs:
         working-directory: source
         run: |
           set -euxo pipefail
-          test "$(git rev-parse HEAD)" = "4cf44525af3d78faeac946c2ef8aecb9224ac48a"
-          grep -Fq 'versionCode 83' app/build.gradle
-          grep -Fq "versionName '3.2.17'" app/build.gradle
+          test "$(git rev-parse HEAD)" = "8f2b160cfe1aa1a8dbf9941f107b91786dd56e61"
+          grep -Fq 'versionCode 84' app/build.gradle
+          grep -Fq "versionName '3.2.18'" app/build.gradle
 
           for f in \
             app/src/main/assets/js/runtime/pending-list-19-30.js \
@@ -76,7 +76,7 @@ jobs:
           grep -Fq 'COLLECTOR DETAILS' app/src/main/assets/js/ui/support-center.js
           grep -Fq 'Add a short collector bio.' app/src/main/assets/js/ui/support-center.js
           grep -Fq 'save.textContent = "SAVE"' app/src/main/assets/js/ui/support-center.js
-          grep -Fq 'client_version:"3.2.17"' app/src/main/assets/js/ui/support-center.js
+          grep -Fq 'client_version:"3.2.18"' app/src/main/assets/js/ui/support-center.js
           grep -Fq 'recent_client_errors' app/src/main/assets/js/ui/support-center.js
 
           grep -Fq '__FOUND_FIELD_MAP_FOOTER_LAYOUT_V1__' app/src/main/assets/js/ui/field-map-footer-layout.js
@@ -85,7 +85,10 @@ jobs:
           grep -Fq 'NOT TO SCALE - LOCATIONS NOT GEOGRAPHICALLY ACCURATE' app/src/main/assets/js/ui/field-map-footer-layout.js
           grep -Fq 'TAP THE LIVE DESTINATION ZONES NUMBERED ON THE FIELD MAP' app/src/main/assets/js/ui/field-map-footer-layout.js
           grep -Fq 'Original digital souvenirs • Not valid postage • Not issued or endorsed by a postal authority' app/src/main/assets/js/ui/field-map-footer-layout.js
-          grep -Fq 'foundPostalExchangeLegal' app/src/main/assets/js/ui/field-map-footer-layout.js
+          grep -Fq '#exploreStateView #stateMapLegend{left:10px!important;right:auto!important;top:9px!important;bottom:auto!important;text-align:left!important}' app/src/main/assets/js/ui/field-map-footer-layout.js
+          ! grep -Fq 'max-width:72%!important' app/src/main/assets/js/ui/field-map-footer-layout.js
+          ! grep -Fq 'max-width:74%!important' app/src/main/assets/js/ui/field-map-footer-layout.js
+          grep -Fq '#exchangePanel > .foundPostalExchangeLegal{min-height:0!important;margin:0!important;display:block!important;padding:0!important;text-align:center!important;font-size:7px!important;line-height:1.15!important;white-space:nowrap!important}' app/src/main/assets/js/ui/field-map-footer-layout.js
 
           grep -Fq '__FOUND_PROGRESSION_REWARD_INTEGRITY_V1__' app/src/main/assets/js/runtime/progression-reward-integrity.js
           grep -Fq 'ack_progression_reward_baseline' app/src/main/assets/js/runtime/progression-reward-integrity.js
@@ -183,10 +186,15 @@ jobs:
             assets/js/ui/profile-showcase-stable.js; do unzip -l "$APK" | grep -F "$f"; done
 
           unzip -p "$APK" assets/js/ui/support-center.js | grep -Fq '__FOUND_SUPPORT_CENTER_V1__'
+          unzip -p "$APK" assets/js/ui/support-center.js | grep -Fq 'client_version:"3.2.18"'
           unzip -p "$APK" assets/js/ui/support-center.js | grep -Fq 'MY REPORTS'
           unzip -p "$APK" assets/js/ui/support-center.js | grep -Fq 'PLAYER REPORTS'
           unzip -p "$APK" assets/js/ui/field-map-footer-layout.js | grep -Fq 'NOT TO SCALE - LOCATIONS NOT GEOGRAPHICALLY ACCURATE'
           unzip -p "$APK" assets/js/ui/field-map-footer-layout.js | grep -Fq 'DRAG • PINCH • ZOOM'
+          unzip -p "$APK" assets/js/ui/field-map-footer-layout.js | grep -Fq '#exploreStateView #stateMapLegend{left:10px!important;right:auto!important;top:9px!important;bottom:auto!important;text-align:left!important}'
+          ! unzip -p "$APK" assets/js/ui/field-map-footer-layout.js | grep -Fq 'max-width:72%!important'
+          ! unzip -p "$APK" assets/js/ui/field-map-footer-layout.js | grep -Fq 'max-width:74%!important'
+          unzip -p "$APK" assets/js/ui/field-map-footer-layout.js | grep -Fq '#exchangePanel > .foundPostalExchangeLegal{min-height:0!important;margin:0!important;display:block!important;padding:0!important;text-align:center!important;font-size:7px!important;line-height:1.15!important;white-space:nowrap!important}'
           unzip -p "$APK" assets/js/runtime/progression-reward-integrity.js | grep -Fq 'ack_progression_reward_baseline'
           unzip -p "$APK" assets/js/ui/provenance-cancel-filter.js | grep -Fq '"LISTED"'
           unzip -p "$APK" assets/js/ui/admin-return-circulation.js | grep -Fq 'admin_return_limited_to_circulation'
@@ -209,13 +217,13 @@ jobs:
 
       - name: Package APK
         run: |
-          cp source/app/build/outputs/apk/debug/app-debug.apk FOUND-v3.2.17-COMPLETE.apk
-          sha256sum FOUND-v3.2.17-COMPLETE.apk
+          cp source/app/build/outputs/apk/debug/app-debug.apk FOUND-v3.2.18-COMPLETE.apk
+          sha256sum FOUND-v3.2.18-COMPLETE.apk
 
       - name: Upload complete APK
         uses: actions/upload-artifact@v4
         with:
-          name: FOUND-v3.2.17-COMPLETE-APK
-          path: FOUND-v3.2.17-COMPLETE.apk
+          name: FOUND-v3.2.18-COMPLETE-APK
+          path: FOUND-v3.2.18-COMPLETE.apk
           if-no-files-found: error
           retention-days: 30
