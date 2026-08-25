@@ -1,0 +1,48 @@
+name: Validate FOUND Blocker Fixes
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/validate-found-blockers.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact private FOUND source
+        uses: actions/checkout@v4
+        with:
+          repository: misterscrappy/FOUND
+          ref: 8a0e5f4cc5f20a7168c2aaaace94248d2aa68c1c
+          token: ${{ secrets.FOUND_PRIVATE_REPO_TOKEN }}
+          path: source
+          persist-credentials: false
+
+      - name: Verify exact blocker source
+        working-directory: source
+        run: |
+          test "$(git rev-parse HEAD)" = "8a0e5f4cc5f20a7168c2aaaace94248d2aa68c1c"
+          test -f app/src/main/assets/js/runtime/stamp-surface-integrity-v4.js
+          test -f app/src/main/assets/js/ui/collector-render-stability-guard.js
+          test -f app/src/main/assets/js/ui/collector-page-scroll-fix.js
+          test -f app/src/main/assets/js/ui/collector-page-tab-routing.js
+          node --check app/src/main/assets/js/runtime/stamp-surface-integrity-v4.js
+          node --check app/src/main/assets/js/ui/collector-render-stability-guard.js
+          node --check app/src/main/assets/js/ui/collector-page-scroll-fix.js
+          node --check app/src/main/assets/js/ui/collector-page-tab-routing.js
+          grep -Fq 'stablePerforatedBody' app/src/main/assets/js/runtime/stamp-surface-integrity-v4.js
+          grep -Fq 'addRimSequence' app/src/main/assets/js/runtime/stamp-surface-integrity-v4.js
+          grep -Fq 'addOuterWalls' app/src/main/assets/js/runtime/stamp-surface-integrity-v4.js
+          grep -Fq 'copy?.rarity === "Gold Foil"' app/src/main/assets/js/runtime/stamp-surface-integrity-v4.js
+          grep -Fq 'lastAssignedMarkup' app/src/main/assets/js/ui/collector-render-stability-guard.js
+          grep -Fq 'movingCollectorIntoPost' app/src/main/assets/js/ui/collector-render-stability-guard.js
+          grep -Fq 'overflow-y:scroll!important' app/src/main/assets/js/ui/collector-page-scroll-fix.js
+          grep -Fq 'if (!PAGE_TABS.has(tab))' app/src/main/assets/js/ui/collector-page-tab-routing.js
+          grep -Fq 'collector-render-stability-guard.js' app/src/main/assets/js/runtime/approved.js
+          grep -Fq 'stamp-surface-integrity-v4.js' app/src/main/assets/js/runtime/approved.js
+          ! grep -Fq 'src="js/runtime/stamp-surface-integrity.js"' app/src/main/assets/js/runtime/approved.js
+          test "$(grep -n 'collector-render-stability-guard.js' app/src/main/assets/js/runtime/approved.js | cut -d: -f1)" -lt "$(grep -n 'collector-center.js' app/src/main/assets/js/runtime/approved.js | cut -d: -f1)"
