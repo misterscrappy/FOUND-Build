@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: misterscrappy/FOUND
-          ref: 38dbf65ad930a442e58cb0a2f5b76b81a3b462ff
+          ref: c8cdfee29c26cf90a890f303b58506a5e956eb31
           token: ${{ secrets.FOUND_PRIVATE_REPO_TOKEN }}
           path: source
           persist-credentials: false
@@ -26,9 +26,9 @@ jobs:
         working-directory: source
         run: |
           set -euxo pipefail
-          test "$(git rev-parse HEAD)" = "38dbf65ad930a442e58cb0a2f5b76b81a3b462ff"
-          grep -Fq 'versionCode 87' app/build.gradle
-          grep -Fq "versionName '3.2.21'" app/build.gradle
+          test "$(git rev-parse HEAD)" = "c8cdfee29c26cf90a890f303b58506a5e956eb31"
+          grep -Fq 'versionCode 88' app/build.gradle
+          grep -Fq "versionName '3.2.22'" app/build.gradle
 
           for f in \
             app/src/main/assets/js/runtime/pending-list-19-30.js \
@@ -91,6 +91,8 @@ jobs:
           grep -Fq 'profile-customization.js' app/src/main/assets/js/runtime/approved.js
           grep -Fq '__FOUND_V3220_CURRENT_LIST__' app/src/main/assets/js/runtime/v3220-current-list.js
           grep -Fq '__FOUND_PROFILE_CUSTOMIZATION_V1__' app/src/main/assets/js/ui/profile-customization.js
+          grep -Fq '__FOUND_PROFILE_CUSTOMIZATION_BACK_GUARD_V2__' app/src/main/assets/js/ui/profile-customization.js
+          grep -Fq 'let backInstalled = false' app/src/main/assets/js/ui/profile-customization.js
           grep -Fq 'expireStaleFreeRush' app/src/main/assets/js/core/app.js
           grep -Fq 'local_postmarks' app/src/main/assets/js/core/app.js
           grep -Fq 'List stamps, browse collector listings, and trade with collectors.' app/src/main/assets/js/runtime/base-alpha-forward.js
@@ -127,7 +129,7 @@ jobs:
           grep -Fq 'PLAYER REPORTS' app/src/main/assets/js/ui/support-center.js
           grep -Fq 'RECENT CLIENT ERRORS' app/src/main/assets/js/ui/support-center.js
           grep -Fq 'COLLECTOR DETAILS' app/src/main/assets/js/ui/support-center.js
-          grep -Fq 'client_version:"3.2.21"' app/src/main/assets/js/ui/support-center.js
+          grep -Fq 'client_version:"3.2.22"' app/src/main/assets/js/ui/support-center.js
           grep -Fq 'recent_client_errors' app/src/main/assets/js/ui/support-center.js
 
           grep -Fq '__FOUND_FIELD_MAP_FOOTER_LAYOUT_V1__' app/src/main/assets/js/ui/field-map-footer-layout.js
@@ -229,6 +231,8 @@ jobs:
           unzip -p "$APK" assets/js/runtime/v3220-current-list.js | grep -Fq 'foundMarketLiveMark'
           unzip -p "$APK" assets/js/runtime/v3220-current-list.js | grep -Fq 'FOUND_EXPLORE_MAP?.openState'
           unzip -p "$APK" assets/js/ui/profile-customization.js | grep -Fq '__FOUND_PROFILE_CUSTOMIZATION_V1__'
+          unzip -p "$APK" assets/js/ui/profile-customization.js | grep -Fq '__FOUND_PROFILE_CUSTOMIZATION_BACK_GUARD_V2__'
+          unzip -p "$APK" assets/js/ui/profile-customization.js | grep -Fq 'let backInstalled = false'
           unzip -p "$APK" assets/js/ui/profile-customization.js | grep -Fq 'SAVE PROFILE PRESENTATION'
           unzip -p "$APK" assets/js/ui/collection-postoffice.js | grep -Fq 'Only Collection-origin stamp details should route back into Collection.'
           unzip -p "$APK" assets/js/ui/collector-center.js | grep -Fq 'ACHIEVEMENTS TEMPORARILY UNAVAILABLE'
@@ -239,7 +243,7 @@ jobs:
           unzip -p "$APK" assets/js/core/app.js | grep -Fq 'expireStaleFreeRush'
           unzip -p "$APK" assets/js/runtime/base-alpha-forward.js | grep -Fq 'trade with collectors.'
           unzip -p "$APK" assets/css/startup.css | grep -Fq 'background: #083a43;'
-          unzip -p "$APK" assets/js/ui/support-center.js | grep -Fq 'client_version:"3.2.21"'
+          unzip -p "$APK" assets/js/ui/support-center.js | grep -Fq 'client_version:"3.2.22"'
           unzip -p "$APK" assets/js/ui/support-center.js | grep -Fq 'MY REPORTS'
           unzip -p "$APK" assets/js/ui/support-center.js | grep -Fq 'PLAYER REPORTS'
           unzip -p "$APK" assets/js/ui/field-map-footer-layout.js | grep -Fq 'NOT TO SCALE - LOCATIONS NOT GEOGRAPHICALLY ACCURATE'
@@ -268,13 +272,13 @@ jobs:
 
       - name: Package APK
         run: |
-          cp source/app/build/outputs/apk/debug/app-debug.apk FOUND-v3.2.21-COMPLETE.apk
-          sha256sum FOUND-v3.2.21-COMPLETE.apk
+          cp source/app/build/outputs/apk/debug/app-debug.apk FOUND-v3.2.22-COMPLETE.apk
+          sha256sum FOUND-v3.2.22-COMPLETE.apk
 
       - name: Upload complete APK
         uses: actions/upload-artifact@v4
         with:
-          name: FOUND-v3.2.21-COMPLETE-APK
-          path: FOUND-v3.2.21-COMPLETE.apk
+          name: FOUND-v3.2.22-COMPLETE-APK
+          path: FOUND-v3.2.22-COMPLETE.apk
           if-no-files-found: error
           retention-days: 30
