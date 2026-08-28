@@ -101,7 +101,7 @@ jobs:
           grep -Fq 'data-mp-load-more="inventory"' app/src/main/assets/js/net/multiplayer.js
           grep -Fq 'STATE.marketVisible += 10' app/src/main/assets/js/net/multiplayer.js
           grep -Fq 'STATE.inventoryVisible += 10' app/src/main/assets/js/net/multiplayer.js
-          grep -Fq 'Gold Foil' app/src/main/assets/js/net/multiplayer.js
+          grep -Fq '/gold foil/i' app/src/main/assets/js/net/multiplayer.js
           grep -Fq 'openGeneration' app/src/main/assets/js/ui/profile-showcase-stable.js
           grep -Fq 'SAVE PROFILE PRESENTATION' app/src/main/assets/js/ui/profile-customization.js
           grep -Fq 'set_my_profile_presentation' app/src/main/assets/js/ui/profile-customization.js
