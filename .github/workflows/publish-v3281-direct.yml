@@ -16,22 +16,19 @@ jobs:
       - name: Checkout public build repo
         uses: actions/checkout@v4
 
-      - name: Download and verify v3.2.81 APK
+      - name: Verify v3.2.81 APK
         run: |
           set -euo pipefail
-          mkdir -p downloads
-          URL='https://eghcznzabgbkrhahdqej.supabase.co/storage/v1/object/public/found-builds/v3.2.81/FOUND-v3.2.81-full-game.apk'
-          OUT='downloads/FOUND-v3.2.81-full-game.apk'
+          APK='downloads/FOUND-v3.2.81-full-game.apk'
           EXPECTED='3e209c795f8e93c5d481b91403fbaaf102cded546e27f1530d089b05b64608d8'
-          curl --fail --location --retry 3 --output "$OUT" "$URL"
-          ACTUAL="$(sha256sum "$OUT" | awk '{print $1}')"
+          test -s "$APK"
+          ACTUAL="$(sha256sum "$APK" | awk '{print $1}')"
           test "$ACTUAL" = "$EXPECTED"
 
-      - name: Commit direct APK to public build repo
-        run: |
-          set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -f downloads/FOUND-v3.2.81-full-game.apk
-          git commit -m 'Publish FOUND v3.2.81 direct APK [skip ci]'
-          git push origin HEAD:main
+      - name: Upload v3.2.81 APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FOUND-v3.2.81-full-game-APK
+          path: downloads/FOUND-v3.2.81-full-game.apk
+          if-no-files-found: error
+          retention-days: 30
