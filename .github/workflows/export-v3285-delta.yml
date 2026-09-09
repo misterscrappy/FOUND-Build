@@ -1,0 +1,50 @@
+name: Export FOUND v3.2.85 private delta
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/export-v3285-delta.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout bridge
+        uses: actions/checkout@v4
+
+      - name: Checkout private FOUND
+        uses: actions/checkout@v4
+        with:
+          repository: misterscrappy/FOUND
+          ref: main
+          token: ${{ secrets.FOUND_PRIVATE_REPO_TOKEN }}
+          path: source
+          persist-credentials: false
+
+      - name: Build and verify compact v3.2.84 to v3.2.85 patch
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq bsdiff
+          BASE='source/builds/FOUND-v3.2.84-full-game.apk'
+          TARGET='source/builds/FOUND-v3.2.85-full-game.apk'
+          test "$(sha256sum "$BASE" | awk '{print $1}')" = 'b4a2f0e1c08afb63e14da2192bb3a6ba07c119f04dd146e03f5bec93bc6c07d8'
+          test "$(sha256sum "$TARGET" | awk '{print $1}')" = 'cb9fdeecaf165913f9a2ec66bd1cc8173fca40b1215b8fb4f6fd148a90cdaa5a'
+          bsdiff "$BASE" "$TARGET" v3285.bsdiff
+          bspatch "$BASE" reconstructed.apk v3285.bsdiff
+          test "$(sha256sum reconstructed.apk | awk '{print $1}')" = 'cb9fdeecaf165913f9a2ec66bd1cc8173fca40b1215b8fb4f6fd148a90cdaa5a'
+          sha256sum v3285.bsdiff > v3285.bsdiff.sha256
+
+      - name: Upload compact patch only
+        uses: actions/upload-artifact@v4
+        with:
+          name: FOUND-v3.2.85-private-delta
+          path: |
+            v3285.bsdiff
+            v3285.bsdiff.sha256
+          if-no-files-found: error
+          retention-days: 1
