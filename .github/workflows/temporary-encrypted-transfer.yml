@@ -1,0 +1,27 @@
+name: Temporary Encrypted Transfer
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  transfer:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Download encrypted v3.2.90 package
+        run: |
+          curl --fail --show-error --silent \
+            'https://eghcznzabgbkrhahdqej.supabase.co/functions/v1/found-v390-encrypted-transfer' \
+            -o FOUND-v3.2.90-full-game.apk.enc
+          test -s FOUND-v3.2.90-full-game.apk.enc
+          stat -c '%s' FOUND-v3.2.90-full-game.apk.enc
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FOUND-v3.2.90-encrypted-transfer
+          path: FOUND-v3.2.90-full-game.apk.enc
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
