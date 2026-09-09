@@ -52,6 +52,23 @@ jobs:
           path: bridge
           fetch-depth: 0
 
+      - name: Publish quota-free latest release
+        working-directory: bridge
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          VERSION='${{ steps.latest.outputs.version }}'
+          SHA='${{ steps.latest.outputs.sha256 }}'
+          NOTES="Current FOUND development APK: v${VERSION}\n\nSHA-256: ${SHA}\n\nGame source remains private; this public bridge contains build delivery only."
+          if gh release view dev-latest >/dev/null 2>&1; then
+            gh release upload dev-latest /tmp/FOUND-latest.apk /tmp/FOUND-latest.apk.sha256 --clobber
+            gh release edit dev-latest --title "FOUND Development APK v${VERSION}" --notes "$NOTES"
+          else
+            gh release create dev-latest /tmp/FOUND-latest.apk /tmp/FOUND-latest.apk.sha256 --target main --title "FOUND Development APK v${VERSION}" --notes "$NOTES"
+          fi
+
       - name: Publish one-commit delivery branch
         working-directory: bridge
         shell: bash
