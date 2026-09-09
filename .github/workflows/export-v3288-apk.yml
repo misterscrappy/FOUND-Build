@@ -1,0 +1,45 @@
+name: Export FOUND v3.2.88 APK
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/export-v3288-apk.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout bridge
+        uses: actions/checkout@v4
+
+      - name: Checkout private FOUND
+        uses: actions/checkout@v4
+        with:
+          repository: misterscrappy/FOUND
+          ref: main
+          token: ${{ secrets.FOUND_PRIVATE_REPO_TOKEN }}
+          path: source
+          persist-credentials: false
+
+      - name: Verify v3.2.88 APK
+        run: |
+          set -euo pipefail
+          APK='source/builds/FOUND-v3.2.88-full-game.apk'
+          test -s "$APK"
+          test "$(sha256sum "$APK" | awk '{print $1}')" = '58384ab89be56c2225f72bf07153ce96ef1aa111032261a78cabaa46fb318d11'
+          cp "$APK" FOUND-v3.2.88-full-game.apk
+          sha256sum FOUND-v3.2.88-full-game.apk > FOUND-v3.2.88-full-game.apk.sha256
+
+      - name: Upload verified APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: FOUND-v3.2.88-full-game-APK
+          path: |
+            FOUND-v3.2.88-full-game.apk
+            FOUND-v3.2.88-full-game.apk.sha256
+          if-no-files-found: error
+          retention-days: 1
