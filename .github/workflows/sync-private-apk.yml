@@ -1,0 +1,79 @@
+name: Sync FOUND APK Delivery
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/sync-private-apk.yml'
+      - 'sync-request.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout verified private build only
+        uses: actions/checkout@v4
+        with:
+          repository: misterscrappy/FOUND
+          ref: main
+          token: ${{ secrets.FOUND_PRIVATE_REPO_TOKEN }}
+          path: private
+          persist-credentials: false
+          sparse-checkout: |
+            builds
+          sparse-checkout-cone-mode: true
+
+      - name: Resolve and verify latest APK
+        id: latest
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="$(python3 -c 'import json; print(json.load(open("private/builds/latest.json"))["version"])')"
+          APK="private/builds/FOUND-v${VERSION}-full-game.apk"
+          SHA_FILE="private/builds/FOUND-v${VERSION}-full-game.apk.sha256"
+          test -s "$APK"
+          test -s "$SHA_FILE"
+          EXPECTED="$(awk '{print $1}' "$SHA_FILE")"
+          ACTUAL="$(sha256sum "$APK" | awk '{print $1}')"
+          test "$EXPECTED" = "$ACTUAL"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "sha256=$ACTUAL" >> "$GITHUB_OUTPUT"
+          cp "$APK" /tmp/FOUND-latest.apk
+          printf '%s  %s\n' "$ACTUAL" 'FOUND-latest.apk' > /tmp/FOUND-latest.apk.sha256
+          cp private/builds/latest.json /tmp/latest.json
+
+      - name: Checkout public delivery repository
+        uses: actions/checkout@v4
+        with:
+          path: bridge
+          fetch-depth: 0
+
+      - name: Publish one-commit delivery branch
+        working-directory: bridge
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan delivery-next
+          git rm -rf . >/dev/null 2>&1 || true
+          cp /tmp/FOUND-latest.apk ./FOUND-latest.apk
+          cp /tmp/FOUND-latest.apk.sha256 ./FOUND-latest.apk.sha256
+          cp /tmp/latest.json ./latest.json
+          cat > README.md <<EOF
+          # FOUND APK Delivery
+
+          Current development APK: v${{ steps.latest.outputs.version }}
+
+          SHA-256: ${{ steps.latest.outputs.sha256 }}
+
+          This branch contains only the current APK delivery files. Game source remains private.
+          EOF
+          git add FOUND-latest.apk FOUND-latest.apk.sha256 latest.json README.md
+          git commit -m "Deliver FOUND v${{ steps.latest.outputs.version }}"
+          git branch -M delivery
+          git push --force origin delivery
