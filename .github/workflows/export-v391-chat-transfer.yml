@@ -1,0 +1,48 @@
+name: Export v3.2.91 Chat Transfer
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/export-v391-chat-transfer.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout private transfer source
+        uses: actions/checkout@v4
+        with:
+          repository: misterscrappy/FOUND
+          ref: export/v3.2.91-chat-delta
+          token: ${{ secrets.FOUND_PRIVATE_REPO_TOKEN }}
+          path: private
+          persist-credentials: false
+          sparse-checkout: |
+            builds/v3291-chat-delta
+          sparse-checkout-cone-mode: true
+
+      - name: Checkout public delivery repo
+        uses: actions/checkout@v4
+        with:
+          path: public
+
+      - name: Publish verified patch text
+        shell: bash
+        run: |
+          set -euo pipefail
+          src='private/builds/v3291-chat-delta/zpatch-1000.lines'
+          test -s "$src"
+          test "$(wc -l < "$src" | tr -d ' ')" = '195'
+          mkdir -p public/transfer
+          cp "$src" public/transfer/v391.zpatch.b64.lines
+          cd public
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add transfer/v391.zpatch.b64.lines
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Publish v3.2.91 chat transfer patch'
+          git push
