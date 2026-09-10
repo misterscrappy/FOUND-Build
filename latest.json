@@ -1,0 +1,9 @@
+{
+  "version": "3.2.94",
+  "run_id": "34471060765",
+  "delivery": "private_repository",
+  "apk_path": "builds/FOUND-v3.2.94-full-game.apk",
+  "sha256_path": "builds/FOUND-v3.2.94-full-game.apk.sha256",
+  "aab_path": "builds/FOUND-v3.2.94-closed-test.aab",
+  "source_sha": "12c6221a90b66e15f03b566d3db7adc07140a2b3"
+}
