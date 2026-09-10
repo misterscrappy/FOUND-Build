@@ -36,7 +36,14 @@ jobs:
           set -euo pipefail
           src='private/builds/v3291-chat-delta/zpatch-1000.lines'
           test -s "$src"
-          test "$(wc -l < "$src" | tr -d ' ')" = '195'
+          python3 - "$src" <<'PY'
+          import sys
+          p=sys.argv[1]
+          lines=open(p, encoding='utf-8').read().splitlines()
+          assert len(lines)==195, len(lines)
+          assert all(len(x)==1000 for x in lines[:194])
+          assert len(lines[194])==432
+          PY
           mkdir -p public/transfer
           cp "$src" public/transfer/v391.zpatch.b64.lines
           cd public
