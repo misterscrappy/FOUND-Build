@@ -1,0 +1,29 @@
+name: Chat Download FOUND v3.2.94
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ '.github/workflows/chat-download-v394.yml' ]
+  workflow_dispatch:
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout public delivery branch
+        uses: actions/checkout@v4
+        with:
+          ref: delivery
+      - name: Verify v3.2.94 APK
+        run: |
+          set -euo pipefail
+          test -s FOUND-latest.apk
+          echo 'a56574f1feb0a90372ad98838eff5099a7a7b82ef95995ccdfafecda6b2430ec  FOUND-latest.apk' | sha256sum -c -
+          cp FOUND-latest.apk FOUND-v3.2.94-full-game.apk
+      - name: Upload APK for ChatGPT handoff
+        uses: actions/upload-artifact@v4
+        with:
+          name: FOUND-v3.2.94-chat-download
+          path: FOUND-v3.2.94-full-game.apk
+          compression-level: 0
+          retention-days: 1
