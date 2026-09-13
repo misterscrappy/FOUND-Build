@@ -1,0 +1,411 @@
+{
+  "firstLayout": "Boot",
+  "gdVersion": {
+    "build": 99,
+    "major": 4,
+    "minor": 0,
+    "revision": 0
+  },
+  "properties": {
+    "adaptGameResolutionAtRuntime": true,
+    "folderProject": false,
+    "orientation": "portrait",
+    "packageName": "com.found.stampadventures",
+    "pixelsRounding": false,
+    "projectUuid": "59ca5148-7e42-4735-b15c-cea5a7376211",
+    "scaleMode": "linear",
+    "sizeOnStartupMode": "adaptWidth",
+    "templateSlug": "",
+    "useExternalSourceFiles": false,
+    "version": "0.1.0",
+    "name": "FOUND GDevelop Port",
+    "description": "GDevelop port of FOUND. Public bridge project for mobile editing.",
+    "author": "",
+    "windowWidth": 1080,
+    "windowHeight": 1920,
+    "latestCompilationDirectory": "",
+    "maxFPS": 60,
+    "minFPS": 20,
+    "verticalSync": true,
+    "platformSpecificAssets": {},
+    "loadingScreen": {
+      "backgroundColor": 539203,
+      "backgroundFadeInDuration": 0.1,
+      "backgroundImageResourceName": "",
+      "gdevelopLogoStyle": "light",
+      "logoAndProgressFadeInDuration": 0.1,
+      "logoAndProgressLogoFadeInDelay": 0,
+      "minDuration": 0,
+      "progressBarColor": 14069328,
+      "progressBarHeight": 2,
+      "progressBarMaxWidth": 222,
+      "progressBarMinWidth": 222,
+      "progressBarWidthPercent": 20,
+      "showGDevelopSplash": false,
+      "showProgressBar": false
+    },
+    "watermark": {
+      "placement": "bottom-left",
+      "showWatermark": false
+    },
+    "authorIds": [],
+    "authorUsernames": [],
+    "categories": [],
+    "playableDevices": [
+      "mobile"
+    ],
+    "extensionProperties": [],
+    "platforms": [
+      {
+        "name": "GDevelop JS platform"
+      }
+    ],
+    "currentPlatform": "GDevelop JS platform"
+  },
+  "resources": {
+    "resources": [],
+    "resourceFolders": []
+  },
+  "objects": [],
+  "objectsGroups": [],
+  "variables": [],
+  "layouts": [
+    {
+      "b": 67,
+      "disableInputWhenNotFocused": true,
+      "mangledName": "Boot",
+      "name": "Boot",
+      "r": 8,
+      "standardSortMethod": true,
+      "stopSoundsOnStartup": true,
+      "title": "",
+      "v": 58,
+      "uiSettings": {
+        "grid": false,
+        "gridType": "rectangular",
+        "gridWidth": 32,
+        "gridHeight": 32,
+        "gridOffsetX": 0,
+        "gridOffsetY": 0,
+        "gridColor": 10401023,
+        "gridAlpha": 0.8,
+        "snap": false,
+        "zoomFactor": 0.55,
+        "windowMask": true
+      },
+      "objectsGroups": [],
+      "variables": [
+        {
+          "folded": true,
+          "name": "BootDelay",
+          "type": "number",
+          "value": 3
+        }
+      ],
+      "instances": [
+        {
+          "angle": 0,
+          "customSize": false,
+          "height": 0,
+          "layer": "Content",
+          "name": "StartupF",
+          "persistentUuid": "42f27eed-115c-4adf-9fb9-3e95c140a9e5",
+          "width": 0,
+          "x": 475,
+          "y": 740,
+          "zOrder": 1,
+          "numberProperties": [],
+          "stringProperties": [],
+          "initialVariables": []
+        },
+        {
+          "angle": 0,
+          "customSize": false,
+          "height": 0,
+          "layer": "Content",
+          "name": "StartupWordmark",
+          "persistentUuid": "73e9403d-504a-4811-a28c-e4da1f422bdb",
+          "width": 0,
+          "x": 410,
+          "y": 980,
+          "zOrder": 2,
+          "numberProperties": [],
+          "stringProperties": [],
+          "initialVariables": []
+        }
+      ],
+      "objects": [
+        {
+          "assetStoreId": "",
+          "bold": true,
+          "italic": false,
+          "name": "StartupF",
+          "smoothed": true,
+          "tags": "",
+          "type": "TextObject::Text",
+          "underlined": false,
+          "variables": [],
+          "effects": [],
+          "behaviors": [],
+          "string": "F",
+          "font": "",
+          "characterSize": 174,
+          "color": {
+            "b": 210,
+            "g": 234,
+            "r": 245
+          }
+        },
+        {
+          "assetStoreId": "",
+          "bold": true,
+          "italic": false,
+          "name": "StartupWordmark",
+          "smoothed": true,
+          "tags": "",
+          "type": "TextObject::Text",
+          "underlined": false,
+          "variables": [],
+          "effects": [],
+          "behaviors": [],
+          "string": "FOUND",
+          "font": "",
+          "characterSize": 51,
+          "color": {
+            "b": 210,
+            "g": 234,
+            "r": 245
+          }
+        }
+      ],
+      "events": [
+        {
+          "type": "BuiltinCommonInstructions::Standard",
+          "conditions": [
+            {
+              "type": {
+                "inverted": false,
+                "value": "DepartScene"
+              },
+              "parameters": [
+                ""
+              ],
+              "subInstructions": []
+            }
+          ],
+          "actions": [
+            {
+              "type": {
+                "inverted": false,
+                "value": "ModVarScene"
+              },
+              "parameters": [
+                "BootDelay",
+                "=",
+                "3"
+              ],
+              "subInstructions": []
+            }
+          ],
+          "events": []
+        },
+        {
+          "type": "BuiltinCommonInstructions::Standard",
+          "conditions": [],
+          "actions": [
+            {
+              "type": {
+                "inverted": false,
+                "value": "ModVarScene"
+              },
+              "parameters": [
+                "BootDelay",
+                "-",
+                "TimeDelta()"
+              ],
+              "subInstructions": []
+            }
+          ],
+          "events": []
+        },
+        {
+          "type": "BuiltinCommonInstructions::Standard",
+          "conditions": [
+            {
+              "type": {
+                "inverted": false,
+                "value": "VarScene"
+              },
+              "parameters": [
+                "BootDelay",
+                "<=",
+                "0"
+              ],
+              "subInstructions": []
+            }
+          ],
+          "actions": [
+            {
+              "type": {
+                "inverted": false,
+                "value": "Scene"
+              },
+              "parameters": [
+                "",
+                "\"Explore\"",
+                ""
+              ],
+              "subInstructions": []
+            }
+          ],
+          "events": []
+        }
+      ],
+      "layers": [
+        {
+          "ambientLightColorB": 0,
+          "ambientLightColorG": 8042920,
+          "ambientLightColorR": 16,
+          "followBaseLayerCamera": false,
+          "isLightingLayer": false,
+          "name": "",
+          "visibility": true,
+          "cameras": [
+            {
+              "defaultSize": true,
+              "defaultViewport": true,
+              "height": 0,
+              "viewportBottom": 1,
+              "viewportLeft": 0,
+              "viewportRight": 1,
+              "viewportTop": 0,
+              "width": 0
+            }
+          ],
+          "effects": []
+        },
+        {
+          "ambientLightColorB": 0,
+          "ambientLightColorG": 8042920,
+          "ambientLightColorR": 16,
+          "followBaseLayerCamera": false,
+          "isLightingLayer": false,
+          "name": "Background",
+          "visibility": true,
+          "cameras": [
+            {
+              "defaultSize": true,
+              "defaultViewport": true,
+              "height": 0,
+              "viewportBottom": 1,
+              "viewportLeft": 0,
+              "viewportRight": 1,
+              "viewportTop": 0,
+              "width": 0
+            }
+          ],
+          "effects": []
+        },
+        {
+          "ambientLightColorB": 0,
+          "ambientLightColorG": 8042920,
+          "ambientLightColorR": 16,
+          "followBaseLayerCamera": false,
+          "isLightingLayer": false,
+          "name": "Content",
+          "visibility": true,
+          "cameras": [
+            {
+              "defaultSize": true,
+              "defaultViewport": true,
+              "height": 0,
+              "viewportBottom": 1,
+              "viewportLeft": 0,
+              "viewportRight": 1,
+              "viewportTop": 0,
+              "width": 0
+            }
+          ],
+          "effects": []
+        },
+        {
+          "ambientLightColorB": 0,
+          "ambientLightColorG": 8042920,
+          "ambientLightColorR": 16,
+          "followBaseLayerCamera": false,
+          "isLightingLayer": false,
+          "name": "Overlay",
+          "visibility": true,
+          "cameras": [
+            {
+              "defaultSize": true,
+              "defaultViewport": true,
+              "height": 0,
+              "viewportBottom": 1,
+              "viewportLeft": 0,
+              "viewportRight": 1,
+              "viewportTop": 0,
+              "width": 0
+            }
+          ],
+          "effects": []
+        }
+      ],
+      "behaviorsSharedData": []
+    },
+    {
+      "b": 67,
+      "disableInputWhenNotFocused": true,
+      "mangledName": "Explore",
+      "name": "Explore",
+      "r": 8,
+      "standardSortMethod": true,
+      "stopSoundsOnStartup": true,
+      "title": "",
+      "v": 58,
+      "uiSettings": {
+        "grid": false,
+        "gridType": "rectangular",
+        "gridWidth": 32,
+        "gridHeight": 32,
+        "gridOffsetX": 0,
+        "gridOffsetY": 0,
+        "gridColor": 10401023,
+        "gridAlpha": 0.8,
+        "snap": false,
+        "zoomFactor": 0.55,
+        "windowMask": true
+      },
+      "objectsGroups": [],
+      "variables": [],
+      "instances": [],
+      "objects": [],
+      "events": [],
+      "layers": [
+        {"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},
+        {"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Background","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},
+        {"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Content","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},
+        {"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Header","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},
+        {"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Navigation","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},
+        {"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Popups","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]}
+      ],
+      "behaviorsSharedData": []
+    },
+    {
+      "b":67,"disableInputWhenNotFocused":true,"mangledName":"MailroomRush","name":"MailroomRush","r":8,"standardSortMethod":true,"stopSoundsOnStartup":true,"title":"","v":58,"uiSettings":{"grid":false,"gridType":"rectangular","gridWidth":32,"gridHeight":32,"gridOffsetX":0,"gridOffsetY":0,"gridColor":10401023,"gridAlpha":0.8,"snap":false,"zoomFactor":0.55,"windowMask":true},"objectsGroups":[],"variables":[],"instances":[],"objects":[],"events":[],"layers":[{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Background","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Content","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Header","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Navigation","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Popups","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]}],"behaviorsSharedData":[]
+    },
+    {
+      "b":67,"disableInputWhenNotFocused":true,"mangledName":"Collection","name":"Collection","r":8,"standardSortMethod":true,"stopSoundsOnStartup":true,"title":"","v":58,"uiSettings":{"grid":false,"gridType":"rectangular","gridWidth":32,"gridHeight":32,"gridOffsetX":0,"gridOffsetY":0,"gridColor":10401023,"gridAlpha":0.8,"snap":false,"zoomFactor":0.55,"windowMask":true},"objectsGroups":[],"variables":[],"instances":[],"objects":[],"events":[],"layers":[{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Background","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Content","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Header","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Navigation","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Popups","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]}],"behaviorsSharedData":[]
+    },
+    {
+      "b":67,"disableInputWhenNotFocused":true,"mangledName":"PostalExchange","name":"PostalExchange","r":8,"standardSortMethod":true,"stopSoundsOnStartup":true,"title":"","v":58,"uiSettings":{"grid":false,"gridType":"rectangular","gridWidth":32,"gridHeight":32,"gridOffsetX":0,"gridOffsetY":0,"gridColor":10401023,"gridAlpha":0.8,"snap":false,"zoomFactor":0.55,"windowMask":true},"objectsGroups":[],"variables":[],"instances":[],"objects":[],"events":[],"layers":[{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Background","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Content","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Header","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Navigation","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Popups","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]}],"behaviorsSharedData":[]
+    },
+    {
+      "b":67,"disableInputWhenNotFocused":true,"mangledName":"Profile","name":"Profile","r":8,"standardSortMethod":true,"stopSoundsOnStartup":true,"title":"","v":58,"uiSettings":{"grid":false,"gridType":"rectangular","gridWidth":32,"gridHeight":32,"gridOffsetX":0,"gridOffsetY":0,"gridColor":10401023,"gridAlpha":0.8,"snap":false,"zoomFactor":0.55,"windowMask":true},"objectsGroups":[],"variables":[],"instances":[],"objects":[],"events":[],"layers":[{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Background","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Content","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Header","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Navigation","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]},{"ambientLightColorB":0,"ambientLightColorG":8042920,"ambientLightColorR":16,"followBaseLayerCamera":false,"isLightingLayer":false,"name":"Popups","visibility":true,"cameras":[{"defaultSize":true,"defaultViewport":true,"height":0,"viewportBottom":1,"viewportLeft":0,"viewportRight":1,"viewportTop":0,"width":0}],"effects":[]}],"behaviorsSharedData":[]
+    }
+  ],
+  "externalEvents": [],
+  "eventsFunctionsExtensions": [],
+  "externalLayouts": [],
+  "externalSourceFiles": []
+}
