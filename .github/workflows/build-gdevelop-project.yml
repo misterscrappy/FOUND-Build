@@ -8,6 +8,7 @@ on:
       - 'scripts/gdevelop-patch-boot.mjs'
       - 'scripts/gdevelop-patch-explore-native.mjs'
       - 'scripts/gdevelop-patch-explore-responsive.mjs'
+      - 'scripts/gdevelop-patch-map-viewport.mjs'
       - '.github/workflows/build-gdevelop-project.yml'
   workflow_dispatch:
 
@@ -32,6 +33,7 @@ jobs:
           node scripts/gdevelop-patch-boot.mjs game.json
           node scripts/gdevelop-patch-explore-native.mjs game.json
           node scripts/gdevelop-patch-explore-responsive.mjs game.json
+          node scripts/gdevelop-patch-map-viewport.mjs game.json
           node -e "const fs=require('fs'); const p=JSON.parse(fs.readFileSync('game.json','utf8')); console.log('FOUND GDevelop', p.properties.version, p.properties.sizeOnStartupMode, p.layouts.map(x=>x.name).join(', '));"
 
       - name: Commit generated project
@@ -45,5 +47,5 @@ jobs:
           git config user.name 'FOUND GDevelop Builder'
           git config user.email 'actions@users.noreply.github.com'
           git add game.json assets/ui/explore-native
-          git commit -m 'Build responsive interactive Explore maps'
+          git commit -m 'Build clipped interactive Explore maps'
           git push
