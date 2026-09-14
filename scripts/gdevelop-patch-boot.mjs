@@ -46,8 +46,8 @@ if (!emblemInstance || !wordmarkInstance || !trackInstance || !barInstance) {
   throw new Error('One or more Boot splash instances are missing');
 }
 
-// 1080 x 1920 design space. The full splash stack is centered as a group,
-// matching the current app: emblem, FOUND wordmark, then the thin loading scan.
+// 1080 x 1920 editor/design placement. Runtime code below recenters the entire
+// splash against the actual visible GDevelop resolution on every device.
 Object.assign(emblemInstance, {
   x: 375,
   y: 743,
@@ -115,14 +115,17 @@ boot.events.push({
   type: 'BuiltinCommonInstructions::JsCode',
   inlineCode: [
     '/* __FOUND_BOOT_SPLASH_MOTION__ */',
-    'const cx = 540;',
+    'const game = runtimeScene.getGame();',
+    'const cx = game.getGameResolutionWidth() / 2;',
+    'const cy = game.getGameResolutionHeight() / 2;',
+    'const stackTop = cy - 219;',
     'const emblem = runtimeScene.getObjects("SplashEmblem")[0];',
     'const wordmark = runtimeScene.getObjects("StartupWordmark")[0];',
     'const track = runtimeScene.getObjects("LoadingTrack")[0];',
     'const bar = runtimeScene.getObjects("LoadingBar")[0];',
-    'if (emblem) emblem.setX(cx - emblem.getWidth() / 2);',
-    'if (wordmark) wordmark.setX(cx - wordmark.getWidth() / 2);',
-    'if (track) track.setX(cx - track.getWidth() / 2);',
+    'if (emblem) { emblem.setX(cx - emblem.getWidth() / 2); emblem.setY(stackTop); }',
+    'if (wordmark) { wordmark.setX(cx - wordmark.getWidth() / 2); wordmark.setY(stackTop + 325); }',
+    'if (track) { track.setX(cx - track.getWidth() / 2); track.setY(stackTop + 432); }',
     'if (track && bar) {',
     '  const seconds = runtimeScene.getTimeManager().getTimeFromStart() / 1000;',
     '  const cycle = seconds % 2;',
@@ -139,6 +142,6 @@ boot.events.push({
   eventsSheetExpanded: false
 });
 
-game.properties.version = '0.2.1';
+game.properties.version = '0.2.2';
 fs.writeFileSync(projectPath, JSON.stringify(game));
-console.log('Patched Boot splash: centered stack + animated left/right loading scan.');
+console.log('Patched Boot splash: viewport-centered stack + animated left/right loading scan.');
