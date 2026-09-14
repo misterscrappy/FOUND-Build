@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'gdevelop-source/**'
+      - 'scripts/gdevelop-patch-boot.mjs'
       - '.github/workflows/build-gdevelop-project.yml'
   workflow_dispatch:
 
@@ -26,6 +27,7 @@ jobs:
           test "$(wc -c < /tmp/found-gdevelop.b64)" -eq 12452
           echo "156f7d56a2c164cddb5d255f783ba5918cac5743a5efa3cdcbc10e59002bacf3  /tmp/found-gdevelop.b64" | sha256sum -c -
           base64 --decode /tmp/found-gdevelop.b64 | gzip --decompress > game.json
+          node scripts/gdevelop-patch-boot.mjs game.json
           node -e "const fs=require('fs'); const p=JSON.parse(fs.readFileSync('game.json','utf8')); console.log('FOUND GDevelop', p.properties.version, p.layouts.map(x=>x.name).join(', '));"
 
       - name: Commit generated project
